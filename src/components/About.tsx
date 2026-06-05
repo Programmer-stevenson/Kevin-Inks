@@ -48,17 +48,27 @@ export function About() {
             "I'm Kevin, a tattoo artist who believes every tattoo should carry meaning, and every
             client deserves the best experience."
           </blockquote>
-          <div className="flex flex-wrap gap-11 mb-10">
-            {STATS.map((s) => (
-              <div key={s.l} className="border-t border-line-strong pt-3.5 min-w-28">
+          {/* Mobile: 2-up grid with the third stat centered beneath the pair.
+              Desktop: original 3-across row. */}
+          <div className="grid grid-cols-2 gap-x-8 gap-y-8 mb-10 min-[900px]:flex min-[900px]:flex-wrap min-[900px]:gap-11">
+            {STATS.map((s, i) => (
+              <div
+                key={s.l}
+                className={`border-t border-line-strong pt-3.5 min-w-28 text-center min-[900px]:text-left ${
+                  i === 2 ? 'col-span-2 justify-self-center min-[900px]:col-auto min-[900px]:justify-self-auto' : ''
+                }`}
+              >
                 <div className="font-display text-3xl text-ink">{s.n}</div>
                 <div className="text-[0.62rem] tracking-[0.24em] uppercase text-ink-faint">{s.l}</div>
               </div>
             ))}
           </div>
-          <a href="#stories" className="btn btn-ghost">
-            Read My Story <span className="arr">→</span>
-          </a>
+          {/* Button: centered on mobile, left-aligned on desktop */}
+          <div className="flex justify-center min-[900px]:justify-start">
+            <a href="#stories" className="btn btn-ghost">
+              Read My Story <span className="arr">→</span>
+            </a>
+          </div>
         </Reveal>
       </div>
     </section>

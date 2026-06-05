@@ -11,6 +11,10 @@ const MOBILE_ZOOM = '105%'
 const MOBILE_SHIFT_X = '30px'
 const MOBILE_IMAGE_WINDOW = 'clamp(14rem, 55vw, 20rem)'
 const MOBILE_TEXT_DROP = '40px'
+// How much LOWER the text sits ON the locked image. This shifts the image's
+// freeze point itself (moving the text via MOBILE_TEXT_DROP does NOT change
+// the locked composition — the lock follows the text and cancels it out).
+const TEXT_ON_IMAGE_DROP_PX = 15
 
 export function EmailList() {
   const [email, setEmail] = useState('')
@@ -53,10 +57,18 @@ export function EmailList() {
     target: sectionRef,
     offset: ['start end', 'end end'],
   })
+  // ONE-WAY LOCK: once the image reaches its locked position it stays there —
+  // scrolling back up does NOT reverse the effect, and a page refresh that
+  // lands past the lock point starts already locked (image simply rides with
+  // the section). The lock only resets if the section fully leaves the
+  // viewport below (so a fresh top-to-bottom pass replays the reveal).
+  const lockedRef = useRef(false)
   const imageY = useTransform(scrollYProgress, (p) => {
-    const lockDist = Math.max(1, geo.markerOffset)
+    const lockDist = Math.max(1, geo.markerOffset - TEXT_ON_IMAGE_DROP_PX)
     const scrolled = p * geo.sectionH
-    const d = Math.min(scrolled, lockDist) // pin until lock, then freeze
+    if (scrolled >= lockDist) lockedRef.current = true
+    else if (p <= 0) lockedRef.current = false
+    const d = lockedRef.current ? lockDist : Math.min(scrolled, lockDist)
     return d - geo.vh
   })
 
