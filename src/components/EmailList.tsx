@@ -12,26 +12,14 @@ const MOBILE_SHIFT_X = '30px'
 const MOBILE_IMAGE_WINDOW = 'clamp(14rem, 55vw, 20rem)'
 const MOBILE_TEXT_DROP = '40px'
 
-// ===== LOCK CALIBRATION =====
-// Where the image freezes. Positive = freezes SOONER (earlier in the
-// scroll), negative = freezes LATER.
-const LOCK_NUDGE_PX = 30
-
-// >>> CALIBRATION MODE <<<
-// Set to true, run the site, scroll the section on your phone, and use the
-// on-screen − / + buttons until the image freezes EXACTLY where you want.
-// The panel shows the number — copy it into LOCK_NUDGE_PX above, then set
-// this back to false. Done forever.
-const DEBUG_CALIBRATE = true
-
 export function EmailList() {
   const [email, setEmail] = useState('')
   const [joined, setJoined] = useState(false)
-  const [nudge, setNudge] = useState(LOCK_NUDGE_PX)
 
   // The image is pinned to the SCREEN while the section scrolls over it,
-  // then freezes (relative to the section) at the lock point and travels
-  // out with it. Scrolling up reverses everything.
+  // then freezes (relative to the section) the moment the end of the copy
+  // reaches the bottom of the screen, and travels out with the section.
+  // Scrolling up reverses everything.
   const sectionRef = useRef<HTMLElement>(null)
   const markerRef = useRef<HTMLDivElement>(null)
   const [geo, setGeo] = useState({ vh: 0, markerOffset: 0, sectionH: 1 })
@@ -66,7 +54,7 @@ export function EmailList() {
     offset: ['start end', 'end end'],
   })
   const imageY = useTransform(scrollYProgress, (p) => {
-    const lockDist = Math.max(1, geo.markerOffset - nudge)
+    const lockDist = Math.max(1, geo.markerOffset)
     const scrolled = p * geo.sectionH
     const d = Math.min(scrolled, lockDist) // pin until lock, then freeze
     return d - geo.vh
@@ -135,8 +123,8 @@ export function EmailList() {
           straight to your inbox, nothing else.
         </Reveal>
 
-        {/* LOCK MARKER: the image freezes when this point (minus the nudge)
-            reaches the bottom of the screen. */}
+        {/* LOCK MARKER: the image freezes when this point reaches the bottom
+            of the screen. */}
         <div ref={markerRef} aria-hidden />
 
         <AnimatePresence mode="wait">
@@ -177,46 +165,6 @@ export function EmailList() {
           One or two emails a month. No noise. Unsubscribe anytime.
         </Reveal>
       </div>
-
-      {/* ===== CALIBRATION PANEL (only when DEBUG_CALIBRATE is true) ===== */}
-      {DEBUG_CALIBRATE && (
-        <div
-          style={{
-            position: 'fixed',
-            bottom: 16,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            zIndex: 9000,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 10,
-            background: 'rgba(15,15,15,0.92)',
-            border: '1px solid rgba(245,241,234,0.3)',
-            padding: '10px 14px',
-            fontFamily: 'monospace',
-            fontSize: 13,
-            color: '#F5F1EA',
-          }}
-        >
-          <button
-            onClick={() => setNudge((n) => n - 10)}
-            style={{ background: '#CFC3B0', color: '#121212', border: 0, width: 34, height: 34, fontSize: 18, cursor: 'pointer' }}
-            aria-label="Lock later"
-          >
-            −
-          </button>
-          <span style={{ minWidth: 150, textAlign: 'center' }}>
-            LOCK_NUDGE_PX: <strong>{nudge}</strong>
-          </span>
-          <button
-            onClick={() => setNudge((n) => n + 10)}
-            style={{ background: '#CFC3B0', color: '#121212', border: 0, width: 34, height: 34, fontSize: 18, cursor: 'pointer' }}
-            aria-label="Lock sooner"
-          >
-            +
-          </button>
-        </div>
-      )}
     </section>
   )
 }
