@@ -66,6 +66,13 @@ export function Hero() {
         @media(min-width:900px){
           .hero-text{padding-top:calc(${NAV_CLEARANCE} + ${HERO_TEXT_TOP_DESKTOP})}
         }
+        /* Mobile: heading sized in pure vw so it scales in lockstep with the
+           full-bleed photo — the heading-on-image composition is IDENTICAL
+           on every mobile viewport. Desktop keeps the clamped size. */
+        .hero-h1{font-size:14vw}
+        @media(min-width:900px){
+          .hero-h1{font-size:clamp(3.4rem, 7.5vw, 6.5rem)}
+        }
       `}</style>
       {/* ===== MOBILE BACKDROP: full-bleed (unchanged) ===== */}
       <motion.div
@@ -124,9 +131,8 @@ export function Hero() {
             Layered text-shadow lifts the type off the photo: a tight dark
             edge for definition plus a wide soft halo for contrast. */}
         <h1
-          className="h-display mb-7"
+          className="hero-h1 h-display mb-7"
           style={{
-            fontSize: 'clamp(3.4rem, 7.5vw, 6.5rem)',
             textShadow: '0 1px 3px rgba(0,0,0,0.55), 0 4px 18px rgba(0,0,0,0.5), 0 12px 48px rgba(0,0,0,0.4)',
           }}
         >
@@ -148,12 +154,14 @@ export function Hero() {
           </span>
         </h1>
 
-        {/* supporting line on an oxblood chip — the red background itself
-            provides the contrast, so no text-shadow needed here.
-            Centered on mobile, left-aligned on desktop. */}
+        {/* supporting line — plain with a text-shadow on mobile (no red
+            background), oxblood chip on desktop. Centered on mobile. */}
         <div className="flex justify-center min-[900px]:justify-start">
           <motion.p
-            className="lede inline-block bg-oxblood text-ink px-5 py-2.5 text-center min-[900px]:text-left"
+            className="lede inline-block text-center bg-transparent px-0 py-0 min-[900px]:bg-oxblood min-[900px]:text-ink min-[900px]:px-5 min-[900px]:py-2.5 min-[900px]:text-left"
+            style={{
+              textShadow: '0 1px 3px rgba(0,0,0,0.55), 0 4px 18px rgba(0,0,0,0.5), 0 12px 48px rgba(0,0,0,0.4)',
+            }}
             {...fade(0.55)}
           >
             Custom artwork designed with meaning.
