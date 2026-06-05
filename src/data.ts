@@ -77,7 +77,7 @@ export const DESIGNS: Design[] = [
     statusLabel: '1 of 1 — Available',
     placement: 'Inner forearm',
     size: '5–7 in',
-    img: '/warrior.jpg',
+    img: '/amazon.jpg',
     alt: 'Still Water — original design study',
   },
   {
