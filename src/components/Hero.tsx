@@ -4,15 +4,17 @@ import { EASE } from './Reveal'
 
 // ===== HERO LAYOUT KNOBS =====
 const NAV_CLEARANCE = '72px'
-const HERO_TEXT_TOP = '20px'
+// Gap below the nav before the text block starts, per breakpoint:
+const HERO_TEXT_TOP_MOBILE = '20px'
+const HERO_TEXT_TOP_DESKTOP = '20px'
 // Extra left offset for the hero text block (eyebrow + headline + lede):
 const HERO_TEXT_LEFT = '15px'
 // ===== HERO HEIGHT =====
 // How tall the hero section is, per breakpoint. 100svh = exactly one screen.
-const HERO_HEIGHT_MOBILE = '115svh'
+const HERO_HEIGHT_MOBILE = 'calc(115svh + 20px)'
 const HERO_HEIGHT_DESKTOP = '125svh'
 // Buttons drop, per breakpoint:
-const BUTTONS_PUSH_DOWN_MOBILE = '105px'
+const BUTTONS_PUSH_DOWN_MOBILE = '125px'
 const BUTTONS_PUSH_DOWN_DESKTOP = '50px'
 
 // ===== DESKTOP IMAGE KNOBS =====
@@ -60,6 +62,10 @@ export function Hero() {
             padding-bottom:max(clamp(3rem,8vh,6rem), calc(${BUTTONS_PUSH_DOWN_DESKTOP} + 28px));
           }
         }
+        .hero-text{padding-top:calc(${NAV_CLEARANCE} + ${HERO_TEXT_TOP_MOBILE})}
+        @media(min-width:900px){
+          .hero-text{padding-top:calc(${NAV_CLEARANCE} + ${HERO_TEXT_TOP_DESKTOP})}
+        }
       `}</style>
       {/* ===== MOBILE BACKDROP: full-bleed (unchanged) ===== */}
       <motion.div
@@ -69,13 +75,13 @@ export function Hero() {
         style={{
           backgroundImage: `url(${IMAGES.hero})`,
           backgroundPosition: 'center 30%',
-          filter: 'grayscale(35%) contrast(1.05)',
+          // no filter — photo shows in full original color on mobile
         }}
         initial={{ scale: 1.07, opacity: 0.4 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 2.2, ease: EASE }}
       />
-      <div className="absolute inset-0 -z-10 min-[900px]:hidden bg-gradient-to-t from-bg-0 from-[4%] via-bg-0/70 via-[35%] to-bg-0/55" />
+      <div className="absolute inset-0 -z-10 min-[900px]:hidden bg-gradient-to-t from-bg-0 from-[4%] via-bg-0/45 via-[30%] to-transparent to-[70%]" />
 
       {/* ===== DESKTOP BACKDROP: image right, black left, fluid blend ===== */}
       <motion.div
@@ -104,18 +110,26 @@ export function Hero() {
       {/* TEXT BLOCK — top of the hero, flush left on desktop (no centered
           max-width container; it starts at the section's edge padding) */}
       <div
-        className="w-full"
+        className="hero-text w-full"
         style={{
-          paddingTop: `calc(${NAV_CLEARANCE} + ${HERO_TEXT_TOP})`,
-          marginLeft: HERO_TEXT_LEFT,
+          // padding (not margin) so the 15px offset can't widen the page
+          paddingLeft: HERO_TEXT_LEFT,
         }}
       >
         <motion.p className="eyebrow mb-6" {...fade(0.35)}>
           Artist First. Tattooer Second.
         </motion.p>
 
-        {/* heading size: min (mobile) / fluid / max (large desktop) */}
-        <h1 className="h-display mb-7" style={{ fontSize: 'clamp(3.4rem, 7.5vw, 6.5rem)' }}>
+        {/* heading size: min (mobile) / fluid / max (large desktop).
+            Layered text-shadow lifts the type off the photo: a tight dark
+            edge for definition plus a wide soft halo for contrast. */}
+        <h1
+          className="h-display mb-7"
+          style={{
+            fontSize: 'clamp(3.4rem, 7.5vw, 6.5rem)',
+            textShadow: '0 1px 3px rgba(0,0,0,0.55), 0 4px 18px rgba(0,0,0,0.5), 0 12px 48px rgba(0,0,0,0.4)',
+          }}
+        >
           <span className="block overflow-hidden">
             <motion.span className="block" variants={line} custom={0} initial="hidden" animate="visible">
               Original Tattoos.
@@ -134,9 +148,17 @@ export function Hero() {
           </span>
         </h1>
 
-        <motion.p className="lede" {...fade(0.55)}>
-          Custom artwork designed with meaning and tattooed with precision.
-        </motion.p>
+        {/* supporting line on an oxblood chip — the red background itself
+            provides the contrast, so no text-shadow needed here.
+            Centered on mobile, left-aligned on desktop. */}
+        <div className="flex justify-center min-[900px]:justify-start">
+          <motion.p
+            className="lede inline-block bg-oxblood text-ink px-5 py-2.5 text-center min-[900px]:text-left"
+            {...fade(0.55)}
+          >
+            Custom artwork designed with meaning.
+          </motion.p>
+        </div>
       </div>
 
       {/* CTA BUTTONS — anchored low, CENTERED horizontally.
@@ -172,9 +194,9 @@ export function Hero() {
         style={{ right: 'var(--pad)', bottom: 'clamp(3rem, 8vh, 6rem)' }}
         {...fade(0.9)}
       >
-        <strong className="text-ink-dim font-medium">@Kevin.Inks</strong>
+        <strong className="text-ink-dim font-medium">Private Studio</strong>
         <span>By Appointment Only</span>
-        <span>Las Vegas</span>
+        <span>Salt Lake City, UT</span>
       </motion.div>
     </section>
   )
