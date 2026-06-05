@@ -12,10 +12,19 @@
 
 html {
   scroll-behavior: smooth;
+  /* NOTE: do not put overflow-x on <html> — it makes iOS Safari treat
+     position:fixed elements (the nav) erratically. The clip lives on #root
+     instead: it contains all page content but cannot affect fixed elements. */
+  background: #0f0f0f; /* overscroll / browser chrome area stays dark on mobile */
+}
+
+#root {
+  overflow-x: clip; /* hard stop for horizontal panning, iOS-safe */
 }
 
 body {
-  @apply bg-bg-0 text-ink font-body font-light antialiased overflow-x-hidden;
+  @apply bg-bg-0 text-ink font-body font-light antialiased;
+  overflow-x: clip;
   line-height: 1.65;
 }
 
