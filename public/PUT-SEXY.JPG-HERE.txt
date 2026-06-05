@@ -1,0 +1,2 @@
+Place your sexy.jpg in this folder, replacing/keeping this exact name: sexy.jpg
+Vite serves everything in /public from the site root, so the code references it as /sexy.jpg

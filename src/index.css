@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   KEVIN INKS — custom layer on top of Tailwind
+   ============================================================ */
+
+:root {
+  --pad: clamp(1.25rem, 5vw, 4.5rem);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-bg-0 text-ink font-body font-light antialiased overflow-x-hidden;
+  line-height: 1.65;
+}
+
+::selection {
+  background: theme('colors.oxblood');
+  color: theme('colors.ink.DEFAULT');
+}
+
+/* film grain atmosphere */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@layer components {
+  .container-site {
+    @apply max-w-site mx-auto;
+  }
+
+  .section-pad {
+    padding: clamp(5rem, 11vw, 9.5rem) var(--pad);
+  }
+
+  .h-display {
+    @apply font-display font-normal uppercase;
+    letter-spacing: 0.01em;
+    line-height: 0.94;
+  }
+
+  .eyebrow {
+    @apply font-body text-[0.7rem] font-medium uppercase text-champagne flex items-center gap-[0.9rem];
+    letter-spacing: 0.32em;
+  }
+  .eyebrow::before {
+    content: '';
+    @apply w-8 h-px bg-crimson;
+  }
+
+  .lede {
+    @apply text-ink-dim;
+    font-size: clamp(1rem, 1.4vw, 1.125rem);
+    max-width: 34em;
+  }
+
+  .btn {
+    @apply inline-flex items-center gap-3 font-body text-[0.72rem] font-medium uppercase no-underline
+      px-[1.9rem] py-[1.05rem] border border-line-strong text-ink bg-transparent cursor-pointer
+      whitespace-nowrap transition-all duration-500 ease-lux;
+    letter-spacing: 0.24em;
+  }
+  .btn .arr {
+    @apply transition-transform duration-500 ease-lux text-[0.85rem];
+  }
+  .btn:hover .arr {
+    transform: translateX(0.4rem);
+  }
+  .btn-fill {
+    @apply bg-champagne border-champagne text-[#121212] font-semibold;
+  }
+  .btn-fill:hover {
+    @apply bg-ink border-ink;
+  }
+  .btn-ghost:hover {
+    @apply border-crimson text-champagne;
+  }
+  .btn-red {
+    @apply border-oxblood text-champagne;
+    background: theme('colors.crimson-soft');
+  }
+  .btn-red:hover {
+    @apply bg-oxblood border-oxblood text-ink;
+  }
+
+  .link-line {
+    @apply inline-flex items-center gap-[0.6rem] text-[0.72rem] font-medium uppercase text-champagne
+      no-underline pb-[0.45rem] border-b border-line-strong transition-all duration-500 ease-lux;
+    letter-spacing: 0.24em;
+  }
+  .link-line:hover {
+    @apply border-crimson gap-4;
+  }
+
+  .img-tone {
+    @apply transition-all duration-1000 ease-lux;
+    filter: grayscale(55%) contrast(1.06);
+  }
+  .group:hover .img-tone {
+    filter: grayscale(0%) contrast(1.02);
+    transform: scale(1.04);
+  }
+}
+
+/* thin bronze/red scrollbar on the work rail */
+.work-rail {
+  scrollbar-width: thin;
+  scrollbar-color: theme('colors.oxblood') transparent;
+}
+.work-rail::-webkit-scrollbar {
+  height: 3px;
+}
+.work-rail::-webkit-scrollbar-thumb {
+  background: theme('colors.oxblood');
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
