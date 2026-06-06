@@ -6,6 +6,7 @@ import { Experience } from './components/Experience'
 import { About } from './components/About'
 import { EmailList } from './components/EmailList'
 import { FinalCta } from './components/FinalCta'
+import { Footer } from './components/Footer'
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
         <EmailList />
         <FinalCta />
       </main>
+      <Footer />
     </>
   )
 }

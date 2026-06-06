@@ -14,6 +14,7 @@ export default {
           faint: 'rgba(245,241,234,0.38)',
         },
         champagne: '#CFC3B0',
+        gold: '#C9A55F', // antique gold — complementary metallic accent
         bronze: '#8D6E63',
         // Red family — deep, editorial, never neon
         oxblood: '#7A1F1F',

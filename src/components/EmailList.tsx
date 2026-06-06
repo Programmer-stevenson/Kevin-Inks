@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion'
+import { useState, type FormEvent } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { Reveal, EASE } from './Reveal'
 
 // Background image for this section.
@@ -7,70 +7,20 @@ import { Reveal, EASE } from './Reveal'
 const EMAIL_BG = '/sexy.jpg'
 
 // ===== MOBILE TUNING KNOBS =====
+// All mobile structural sizes are in vw so the composition is IDENTICAL on
+// every phone (SE to Pro Max) — values calibrated to a 390px-wide screen.
 const MOBILE_ZOOM = '105%'
-const MOBILE_SHIFT_X = '30px'
-const MOBILE_IMAGE_WINDOW = 'clamp(14rem, 55vw, 20rem)'
-const MOBILE_TEXT_DROP = '40px'
-// How much LOWER the text sits ON the locked image. This shifts the image's
-// freeze point itself (moving the text via MOBILE_TEXT_DROP does NOT change
-// the locked composition — the lock follows the text and cancels it out).
-const TEXT_ON_IMAGE_DROP_PX = 15
+const MOBILE_SHIFT_X = '7.7vw'        // horizontal nudge (was 30px @390)
+const MOBILE_IMAGE_WINDOW = '67.7vw'  // clear image space above the text
+
+// ===== TABLET TUNING KNOBS (600–899px) =====
+const TABLET_ZOOM = '72%'
+const TABLET_SHIFT_X = '0px'
+const TABLET_IMAGE_WINDOW = 'clamp(18rem, 48vw, 26rem)'
 
 export function EmailList() {
   const [email, setEmail] = useState('')
   const [joined, setJoined] = useState(false)
-
-  // The image is pinned to the SCREEN while the section scrolls over it,
-  // then freezes (relative to the section) the moment the end of the copy
-  // reaches the bottom of the screen, and travels out with the section.
-  // Scrolling up reverses everything.
-  const sectionRef = useRef<HTMLElement>(null)
-  const markerRef = useRef<HTMLDivElement>(null)
-  const [geo, setGeo] = useState({ vh: 0, markerOffset: 0, sectionH: 1 })
-
-  useEffect(() => {
-    const measure = () => {
-      const section = sectionRef.current
-      const marker = markerRef.current
-      if (!section || !marker) return
-      setGeo({
-        vh: window.innerHeight,
-        markerOffset:
-          marker.getBoundingClientRect().top - section.getBoundingClientRect().top,
-        sectionH: section.offsetHeight || 1,
-      })
-    }
-    measure()
-    // Re-measure after fonts/images settle — early measurements can be off,
-    // which silently shifts the lock point.
-    const t = window.setTimeout(measure, 600)
-    window.addEventListener('load', measure)
-    window.addEventListener('resize', measure)
-    return () => {
-      window.clearTimeout(t)
-      window.removeEventListener('load', measure)
-      window.removeEventListener('resize', measure)
-    }
-  }, [])
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start end', 'end end'],
-  })
-  // ONE-WAY LOCK: once the image reaches its locked position it stays there —
-  // scrolling back up does NOT reverse the effect, and a page refresh that
-  // lands past the lock point starts already locked (image simply rides with
-  // the section). The lock only resets if the section fully leaves the
-  // viewport below (so a fresh top-to-bottom pass replays the reveal).
-  const lockedRef = useRef(false)
-  const imageY = useTransform(scrollYProgress, (p) => {
-    const lockDist = Math.max(1, geo.markerOffset - TEXT_ON_IMAGE_DROP_PX)
-    const scrolled = p * geo.sectionH
-    if (scrolled >= lockDist) lockedRef.current = true
-    else if (p <= 0) lockedRef.current = false
-    const d = lockedRef.current ? lockDist : Math.min(scrolled, lockDist)
-    return d - geo.vh
-  })
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -80,48 +30,88 @@ export function EmailList() {
   }
 
   return (
+    /*
+      STICKY IMAGE: the photo rides up with the page while the section
+      enters, then PINS to the screen the moment the section top reaches the
+      viewport top — and stays pinned while the text scrolls over it,
+      releasing only when the section ends. Pure CSS position:sticky inside
+      a full-height track. NOTE: ancestors use overflow-x:CLIP (not hidden) —
+      hidden would break sticky; clip does not.
+    */
     <section
       id="stories"
-      ref={sectionRef}
-      className="section-pad relative isolate border-b border-line bg-bg-0"
-      style={{ clipPath: 'inset(0)' }}
+      className="email-sec section-pad relative isolate border-b border-line bg-bg-0"
+      style={{ clipPath: 'inset(0)', overflowX: 'clip' }}
     >
-      {/* Image frame: pinned to the screen during the reveal, frozen at the lock */}
-      <motion.div aria-hidden className="absolute inset-x-0 top-0 -z-20 h-screen" style={{ y: imageY }}>
-        <img
-          src={EMAIL_BG}
-          alt=""
-          className="absolute top-0 left-1/2 max-w-none min-[900px]:hidden"
-          style={{
-            width: MOBILE_ZOOM,
-            transform: `translateX(calc(-50% + ${MOBILE_SHIFT_X}))`,
-            filter: 'grayscale(45%) brightness(0.6) contrast(1.08)',
-          }}
-        />
-        <div
-          className="absolute inset-y-0 right-0 hidden w-[55%] bg-cover bg-center min-[900px]:block"
-          style={{
-            backgroundImage: `url(${EMAIL_BG})`,
-            filter: 'grayscale(45%) brightness(0.6) contrast(1.08)',
-          }}
-        />
-      </motion.div>
+      <style>{`
+        .email-sec{
+          --em-zoom:${MOBILE_ZOOM};
+          --em-shift:${MOBILE_SHIFT_X};
+          --em-window:${MOBILE_IMAGE_WINDOW};
+        }
+        @media(min-width:600px) and (max-width:899px){
+          .email-sec{
+            --em-zoom:${TABLET_ZOOM};
+            --em-shift:${TABLET_SHIFT_X};
+            --em-window:${TABLET_IMAGE_WINDOW};
+          }
+        }
+        /* mobile type scales with the viewport (390px baseline) so the
+           text-on-image structure is identical on every phone */
+        .email-h2{font-size:10.7vw}
+        .email-sec .eyebrow{font-size:2.9vw;letter-spacing:0.32em}
+        .email-sec .lede{font-size:4.15vw}
+        @media(min-width:600px){
+          .email-h2{font-size:clamp(2.6rem, 8vw, 6.4rem)}
+          .email-sec .eyebrow{font-size:0.7rem}
+          .email-sec .lede{font-size:clamp(1rem, 1.4vw, 1.125rem)}
+        }
+      `}</style>
 
-      <div className="absolute inset-0 -z-10 min-[900px]:hidden bg-gradient-to-b from-bg-0/25 via-bg-0/65 via-[55%] to-bg-0" />
-      <div className="absolute inset-0 -z-10 hidden min-[900px]:block bg-gradient-to-r from-bg-0 from-[42%] via-bg-0/55 via-[62%] to-bg-0/15" />
+      {/* MOBILE/TABLET: background track + sticky frame (image rides in,
+          pins to the screen, text scrolls over it) */}
+      <div aria-hidden className="absolute inset-0 -z-20 min-[900px]:hidden">
+        <div className="sticky top-0 h-screen">
+          <img
+            src={EMAIL_BG}
+            alt=""
+            className="absolute top-0 left-1/2 max-w-none"
+            style={{
+              width: 'var(--em-zoom)',
+              transform: 'translateX(calc(-50% + var(--em-shift)))',
+              filter: 'grayscale(45%) brightness(0.6) contrast(1.08)',
+            }}
+          />
+        </div>
+      </div>
 
+      {/* DESKTOP: the original scroll effect — the image is FIXED to the
+          screen and the section's clip-path acts as a window passing over it
+          (curtain reveal on entry, text scrolling over the pinned photo).
+          The section's clip-path:inset(0) confines it to this section. */}
       <div
         aria-hidden
-        className="min-[900px]:hidden"
-        style={{ height: `calc(${MOBILE_IMAGE_WINDOW} + ${MOBILE_TEXT_DROP})` }}
+        className="fixed inset-y-0 right-0 -z-20 hidden w-[55%] bg-cover bg-center min-[900px]:block"
+        style={{
+          backgroundImage: `url(${EMAIL_BG})`,
+          filter: 'grayscale(45%) brightness(0.6) contrast(1.08)',
+        }}
       />
+
+      {/* Mobile/tablet scrim: clear in the image window, darkening toward the text */}
+      <div className="absolute inset-0 -z-10 min-[900px]:hidden bg-gradient-to-b from-bg-0/25 via-bg-0/65 via-[55%] to-bg-0" />
+      {/* Desktop blend */}
+      <div className="absolute inset-0 -z-10 hidden min-[900px]:block bg-gradient-to-r from-bg-0 from-[42%] via-bg-0/55 via-[62%] to-bg-0/15" />
+
+      {/* Spacer: the clear image window above the text */}
+      <div aria-hidden className="min-[900px]:hidden" style={{ height: 'var(--em-window)' }} />
 
       <div className="container-site">
         <Reveal as="p" className="eyebrow mb-6">
           The Inner Circle
         </Reveal>
         <Reveal as="h2" delay={1} className="h-display mb-5" >
-          <span style={{ fontSize: 'clamp(2.6rem, 8vw, 6.4rem)' }} className="block leading-[0.94]">
+          <span className="email-h2 block leading-[0.94]">
             New Designs.
             <br />
             <span className="text-champagne">Exclusive Access.</span>
@@ -134,10 +124,6 @@ export function EmailList() {
           hours early, first access to booking openings, and the stories behind each piece —
           straight to your inbox, nothing else.
         </Reveal>
-
-        {/* LOCK MARKER: the image freezes when this point reaches the bottom
-            of the screen. */}
-        <div ref={markerRef} aria-hidden />
 
         <AnimatePresence mode="wait">
           {!joined ? (

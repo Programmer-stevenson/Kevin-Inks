@@ -17,6 +17,12 @@ const HERO_HEIGHT_DESKTOP = '125svh'
 const BUTTONS_PUSH_DOWN_MOBILE = '125px'
 const BUTTONS_PUSH_DOWN_DESKTOP = '50px'
 
+// ===== MOBILE IMAGE KNOB =====
+// Scale of the photo on mobile. 100% fills the hero height (the old "cover"
+// zoom); lower = slightly zoomed out. The small gap this leaves at the
+// bottom dissolves into the dark scrim.
+const MOBILE_HERO_ZOOM = '92%'
+
 // ===== DESKTOP IMAGE KNOBS =====
 // The hero photo occupies the right side on desktop; the left side is solid
 // black that dissolves into the image.
@@ -54,7 +60,7 @@ export function Hero() {
         .hero-root{
           min-height:${HERO_HEIGHT_MOBILE};
           /* bottom padding grows with the button drop so they're never clipped */
-          padding-bottom:max(clamp(3rem,8vh,6rem), calc(${BUTTONS_PUSH_DOWN_MOBILE} + 28px));
+          padding-bottom:max(clamp(3rem,8vh,6rem), calc(${BUTTONS_PUSH_DOWN_MOBILE} + 100px));
         }
         @media(min-width:900px){
           .hero-root{
@@ -73,15 +79,28 @@ export function Hero() {
         @media(min-width:900px){
           .hero-h1{font-size:clamp(3.4rem, 7.5vw, 6.5rem)}
         }
+        /* ===== TABLET (600–899px: iPad portrait, large foldables) =====
+           The phone layout stretched to tablet width balloons — cap the
+           heading, bring the hero back to one screen, moderate button drop */
+        @media(min-width:600px) and (max-width:899px){
+          .hero-h1{font-size:4.8rem}
+          .hero-root{
+            min-height:100svh;
+            padding-bottom:max(clamp(3rem,8vh,6rem), calc(60px + 100px));
+          }
+          .hero-ctas{--btn-drop:60px}
+          .hero-text{padding-top:calc(${NAV_CLEARANCE} + 30px)}
+        }
       `}</style>
       {/* ===== MOBILE BACKDROP: full-bleed (unchanged) ===== */}
       <motion.div
         aria-label="Kevin tattooing a client in the studio"
         role="img"
-        className="absolute inset-0 -z-20 bg-[#1a1816] bg-cover bg-no-repeat min-[900px]:hidden"
+        className="absolute inset-0 -z-20 bg-[#1a1816] bg-no-repeat min-[900px]:hidden"
         style={{
           backgroundImage: `url(${IMAGES.hero})`,
-          backgroundPosition: 'center 30%',
+          backgroundSize: `auto ${MOBILE_HERO_ZOOM}`,
+          backgroundPosition: 'center top',
           // no filter — photo shows in full original color on mobile
         }}
         initial={{ scale: 1.07, opacity: 0.4 }}
@@ -195,6 +214,34 @@ export function Hero() {
             Browse Designs <span className="arr">→</span>
           </a>
         </motion.div>
+
+        {/* studio meta — mobile & tablet version: centered under the buttons
+            (desktop keeps the absolute bottom-right block below) */}
+        <motion.div
+          className="min-[900px]:hidden mt-7 flex flex-col items-center gap-1 text-center text-[0.64rem] tracking-[0.22em] uppercase text-ink-faint"
+          {...fade(0.9)}
+        >
+          <strong className="text-ink-dim font-medium inline-flex items-center gap-2">
+            {/* Instagram glyph in brand gradient (unique id — the footer has its own) */}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" strokeWidth="2" aria-hidden>
+              <defs>
+                <linearGradient id="ig-grad-hero" x1="0%" y1="100%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#FEDA75" />
+                  <stop offset="30%" stopColor="#FA7E1E" />
+                  <stop offset="55%" stopColor="#D62976" />
+                  <stop offset="80%" stopColor="#962FBF" />
+                  <stop offset="100%" stopColor="#4F5BD5" />
+                </linearGradient>
+              </defs>
+              <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" stroke="url(#ig-grad-hero)" />
+              <circle cx="12" cy="12" r="4.4" stroke="url(#ig-grad-hero)" />
+              <circle cx="17.6" cy="6.4" r="1.3" fill="url(#ig-grad-hero)" />
+            </svg>
+            @Kevin.inks
+          </strong>
+
+          <span>Las Vegas, NV</span>
+        </motion.div>
       </div>
 
       <motion.div
@@ -202,9 +249,9 @@ export function Hero() {
         style={{ right: 'var(--pad)', bottom: 'clamp(3rem, 8vh, 6rem)' }}
         {...fade(0.9)}
       >
-        <strong className="text-ink-dim font-medium">Private Studio</strong>
+        <strong className="text-ink-dim font-medium">@Kevin.inks</strong>
         <span>By Appointment Only</span>
-        <span>Salt Lake City, UT</span>
+        <span>Las Vegas, NV</span>
       </motion.div>
     </section>
   )

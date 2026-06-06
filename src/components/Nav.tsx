@@ -35,13 +35,15 @@ export function Nav() {
           KEVIN<span className="text-crimson">.</span>INKS
         </a>
 
+        {/* Link row: condensed spacing/type from 900–1149px (iPad landscape,
+            small laptops), full spacing from 1150px up — never crams */}
         <nav className="hidden min-[900px]:block">
-          <ul className="flex gap-10 list-none">
+          <ul className="flex list-none gap-5 min-[1150px]:gap-10">
             {NAV_LINKS.map((l) => (
               <li key={l.href}>
                 <a
                   href={l.href}
-                  className="text-ink-dim no-underline text-[0.72rem] font-medium uppercase tracking-[0.18em] transition-colors duration-300 hover:text-champagne"
+                  className="text-ink-dim no-underline font-medium uppercase transition-colors duration-300 hover:text-champagne whitespace-nowrap text-[0.64rem] tracking-[0.12em] min-[1150px]:text-[0.72rem] min-[1150px]:tracking-[0.18em]"
                 >
                   {l.label}
                 </a>
@@ -50,12 +52,15 @@ export function Nav() {
           </ul>
         </nav>
 
-        <div className="flex items-center gap-6">
-          <a href="#book" className="btn btn-fill hidden min-[900px]:inline-flex !px-6 !py-3">
+        <div className="flex items-center gap-4 min-[1150px]:gap-6">
+          <a
+            href="#book"
+            className="btn btn-fill hidden min-[900px]:inline-flex whitespace-nowrap !px-4 !py-2.5 !text-[0.62rem] min-[1150px]:!px-6 min-[1150px]:!py-3 min-[1150px]:!text-[0.72rem]"
+          >
             Book Consultation
           </a>
           <button
-            className="bg-transparent border-0 cursor-pointer flex flex-col gap-1.5 p-1.5 z-[110]"
+            className="bg-transparent border-0 cursor-pointer flex min-[900px]:hidden flex-col gap-1.5 p-1.5 z-[110]"
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
