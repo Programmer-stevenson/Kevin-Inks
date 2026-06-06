@@ -147,5 +147,8 @@ export const IMAGES = {
 export const CONTACT = {
   email: 'hello@kevininks.com',
   instagram: 'https://instagram.com',
+  threads: 'https://threads.net',
   tiktok: 'https://tiktok.com',
+  // Google Business Profile — replace with the real share link (g.page/r/...)
+  googleBusiness: 'https://g.page/',
 }
