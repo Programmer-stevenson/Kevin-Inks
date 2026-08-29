@@ -15,9 +15,10 @@ export default function App() {
       <main>
         <Hero />
         <Work />
+        <About />
         <Designs />
         <Experience />
-        <About />
+        
         <EmailList />
         <FinalCta />
       </main>
