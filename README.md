@@ -31,6 +31,6 @@ npm run preview   # preview the production build
 
 ## Notes
 
-- Placeholder photography from Unsplash — swap with real studio photography in `src/data.ts`.
+
 - Scroll reveals + hero stagger use Framer Motion (`whileInView`, `AnimatePresence`).
 - `prefers-reduced-motion` is respected via CSS.
