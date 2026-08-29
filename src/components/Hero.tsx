@@ -218,31 +218,70 @@ export function Hero() {
 
         {/* studio meta — mobile & tablet version: centered under the buttons
             (desktop keeps the absolute bottom-right block below) */}
-        <motion.div
-          className="min-[900px]:hidden mt-7 flex flex-col items-center gap-1 text-center text-[0.64rem] tracking-[0.22em] uppercase text-ink-faint"
-          {...fade(0.9)}
+       <motion.div
+  className="min-[900px]:hidden mt-7 flex flex-col items-center gap-1 text-center text-[0.64rem] tracking-[0.22em] uppercase text-ink-faint"
+  {...fade(0.9)}
+>
+  <a
+    href="https://www.instagram.com/kevin.inks"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Visit Kevin Inks on Instagram"
+    className="text-ink-dim font-medium inline-flex items-center gap-2 no-underline transition-colors duration-300 hover:text-ink focus-visible:text-ink"
+  >
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      strokeWidth="2"
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient
+          id="ig-grad-hero"
+          x1="0%"
+          y1="100%"
+          x2="100%"
+          y2="0%"
         >
-          <strong className="text-ink-dim font-medium inline-flex items-center gap-2">
-            {/* Instagram glyph in brand gradient (unique id — the footer has its own) */}
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" strokeWidth="2" aria-hidden>
-              <defs>
-                <linearGradient id="ig-grad-hero" x1="0%" y1="100%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#FEDA75" />
-                  <stop offset="30%" stopColor="#FA7E1E" />
-                  <stop offset="55%" stopColor="#D62976" />
-                  <stop offset="80%" stopColor="#962FBF" />
-                  <stop offset="100%" stopColor="#4F5BD5" />
-                </linearGradient>
-              </defs>
-              <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" stroke="url(#ig-grad-hero)" />
-              <circle cx="12" cy="12" r="4.4" stroke="url(#ig-grad-hero)" />
-              <circle cx="17.6" cy="6.4" r="1.3" fill="url(#ig-grad-hero)" />
-            </svg>
-            {site.hero.instagramHandle}
-          </strong>
+          <stop offset="0%" stopColor="#FEDA75" />
+          <stop offset="30%" stopColor="#FA7E1E" />
+          <stop offset="55%" stopColor="#D62976" />
+          <stop offset="80%" stopColor="#962FBF" />
+          <stop offset="100%" stopColor="#4F5BD5" />
+        </linearGradient>
+      </defs>
 
-          <span>{site.hero.location}</span>
-        </motion.div>
+      <rect
+        x="2.5"
+        y="2.5"
+        width="19"
+        height="19"
+        rx="5.5"
+        stroke="url(#ig-grad-hero)"
+      />
+
+      <circle
+        cx="12"
+        cy="12"
+        r="4.4"
+        stroke="url(#ig-grad-hero)"
+      />
+
+      <circle
+        cx="17.6"
+        cy="6.4"
+        r="1.3"
+        fill="url(#ig-grad-hero)"
+      />
+    </svg>
+
+    {site.hero.instagramHandle}
+  </a>
+
+  <span>{site.hero.location}</span>
+</motion.div>
       </div>
 
       <motion.div
@@ -250,7 +289,61 @@ export function Hero() {
         style={{ right: 'var(--pad)', bottom: 'clamp(3rem, 8vh, 6rem)' }}
         {...fade(0.9)}
       >
-        <strong className="text-ink-dim font-medium">{site.hero.instagramHandle}</strong>
+        <a
+          href="https://www.instagram.com/kevin.inks"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Visit Kevin Inks on Instagram"
+          className="self-end text-ink-dim font-medium inline-flex items-center gap-2 no-underline transition-colors duration-300 hover:text-ink focus-visible:text-ink"
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            strokeWidth="2"
+            aria-hidden="true"
+          >
+            <defs>
+              <linearGradient
+                id="ig-grad-hero-desktop"
+                x1="0%"
+                y1="100%"
+                x2="100%"
+                y2="0%"
+              >
+                <stop offset="0%" stopColor="#FEDA75" />
+                <stop offset="30%" stopColor="#FA7E1E" />
+                <stop offset="55%" stopColor="#D62976" />
+                <stop offset="80%" stopColor="#962FBF" />
+                <stop offset="100%" stopColor="#4F5BD5" />
+              </linearGradient>
+            </defs>
+
+            <rect
+              x="2.5"
+              y="2.5"
+              width="19"
+              height="19"
+              rx="5.5"
+              stroke="url(#ig-grad-hero-desktop)"
+            />
+            <circle
+              cx="12"
+              cy="12"
+              r="4.4"
+              stroke="url(#ig-grad-hero-desktop)"
+            />
+            <circle
+              cx="17.6"
+              cy="6.4"
+              r="1.3"
+              fill="url(#ig-grad-hero-desktop)"
+            />
+          </svg>
+
+          {site.hero.instagramHandle}
+        </a>
         <span>{site.hero.desktopNote}</span>
         <span>{site.hero.location}</span>
       </motion.div>
