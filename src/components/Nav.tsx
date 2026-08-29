@@ -2,8 +2,11 @@ import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { NAV_LINKS } from '../data'
 import { EASE } from './Reveal'
+import { useWordPressContent } from '../wordpress'
 
 export function Nav() {
+  const { site } = useWordPressContent()
+  const navLinks = NAV_LINKS.map((link, index) => ({ ...link, label: site.navLabels[index] || link.label }))
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
 
@@ -32,14 +35,14 @@ export function Nav() {
         style={{ paddingLeft: 'var(--pad)', paddingRight: 'var(--pad)' }}
       >
         <a href="#top" className="font-display text-xl tracking-[0.06em] text-ink no-underline">
-          KEVIN<span className="text-crimson">.</span>INKS
+          {site.brand.split('.')[0]}<span className="text-crimson">.</span>{site.brand.split('.').slice(1).join('.')}
         </a>
 
         {/* Link row: condensed spacing/type from 900–1149px (iPad landscape,
             small laptops), full spacing from 1150px up — never crams */}
         <nav className="hidden min-[900px]:block">
           <ul className="flex list-none gap-5 min-[1150px]:gap-10">
-            {NAV_LINKS.map((l) => (
+            {navLinks.map((l) => (
               <li key={l.href}>
                 <a
                   href={l.href}
@@ -57,7 +60,7 @@ export function Nav() {
             href="#book"
             className="btn btn-fill hidden min-[900px]:inline-flex whitespace-nowrap !px-4 !py-2.5 !text-[0.62rem] min-[1150px]:!px-6 min-[1150px]:!py-3 min-[1150px]:!text-[0.72rem]"
           >
-            Book Consultation
+            {site.hero.primaryCta}
           </a>
           <button
             className="bg-transparent border-0 cursor-pointer flex min-[900px]:hidden flex-col gap-1.5 p-1.5 z-[110]"
@@ -88,7 +91,7 @@ export function Nav() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.45, ease: EASE }}
           >
-            {NAV_LINKS.map((l, i) => (
+            {navLinks.map((l, i) => (
               <motion.a
                 key={l.href}
                 href={l.href}
@@ -110,7 +113,7 @@ export function Nav() {
               animate={{ y: 0, opacity: 1, transition: { delay: 0.45, duration: 0.7, ease: EASE } }}
               exit={{ opacity: 0, transition: { duration: 0.2 } }}
             >
-              Book Consultation <span className="arr">→</span>
+              {site.hero.primaryCta} <span className="arr">→</span>
             </motion.a>
           </motion.div>
         )}

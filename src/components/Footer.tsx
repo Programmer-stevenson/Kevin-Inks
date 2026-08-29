@@ -1,28 +1,12 @@
-import { CONTACT } from '../data'
+import { useWordPressContent } from '../wordpress'
 import { Reveal } from './Reveal'
 
-const COLUMNS = [
-  {
-    heading: 'Follow',
-    links: [
-      { label: 'Instagram', href: CONTACT.instagram, external: true },
-      { label: 'Threads', href: CONTACT.threads, external: true },
-      { label: 'TikTok', href: CONTACT.tiktok, external: true },
-      { label: 'Google Reviews', href: CONTACT.googleBusiness, external: true },
-    ],
-  },
-  {
-    heading: 'Studio',
-    links: [
-      { label: 'Book Consultation', href: '#book', external: false },
-      { label: 'Email', href: `mailto:${CONTACT.email}`, external: false },
-      { label: 'Privacy Policy', href: '#', external: false },
-      { label: 'Terms', href: '#', external: false },
-    ],
-  },
-]
-
 export function Footer() {
+  const { site } = useWordPressContent()
+  const COLUMNS = [
+    { heading: 'Follow', links: [{ label: 'Instagram', href: site.contact.instagram, external: true }, { label: 'Threads', href: site.contact.threads, external: true }, { label: 'TikTok', href: site.contact.tiktok, external: true }, { label: 'Google Reviews', href: site.contact.googleBusiness, external: true }] },
+    { heading: 'Studio', links: [{ label: site.hero.primaryCta, href: '#book', external: false }, { label: 'Email', href: `mailto:${site.contact.email}`, external: false }, { label: 'Privacy Policy', href: '#', external: false }, { label: 'Terms', href: '#', external: false }] },
+  ]
   return (
     <footer
       className="relative overflow-hidden border-t border-line"
@@ -68,10 +52,10 @@ export function Footer() {
         {/* brand mark + social logos */}
         <Reveal className="flex flex-col items-center gap-3">
           <a href="#top" className="font-display text-2xl tracking-[0.06em] text-ink no-underline">
-            KEVIN<span className="text-crimson">.</span>INKS
+            {site.brand.split('.')[0]}<span className="text-crimson">.</span>{site.brand.split('.').slice(1).join('.')}
           </a>
           <p className="text-[0.62rem] tracking-[0.3em] uppercase text-ink-faint">
-            Original Tattoos. Lasting Stories.
+            {site.footer.tagline}
           </p>
 
           {/* logo row: Instagram / Threads / Google Business Profile.
@@ -92,7 +76,7 @@ export function Footer() {
           <div className="flex items-start gap-6 mt-5">
             {[
               {
-                href: CONTACT.instagram,
+                href: site.contact.instagram,
                 label: 'Instagram',
                 icon: (
                   <svg width="19" height="19" viewBox="0 0 24 24" fill="none" strokeWidth="1.6">
@@ -112,7 +96,7 @@ export function Footer() {
                 ),
               },
               {
-                href: CONTACT.threads,
+                href: site.contact.threads,
                 label: 'Threads',
                 icon: (
                   <svg width="19" height="19" viewBox="0 0 24 24">
@@ -127,7 +111,7 @@ export function Footer() {
                 ),
               },
               {
-                href: CONTACT.googleBusiness,
+                href: site.contact.googleBusiness,
                 label: 'Reviews',
                 icon: (
                   <svg width="19" height="19" viewBox="0 0 24 24">
@@ -188,16 +172,16 @@ export function Footer() {
           className="w-full pt-8 border-t border-line flex flex-col items-center gap-2 text-[0.62rem] text-ink-faint tracking-[0.14em] uppercase"
         >
           <span>
-            © 2026 Kevin Inks <span className="text-crimson">●</span> Original artwork only
+            {site.footer.copyright}
           </span>
-          <span>Private Studio — By Appointment — Las Vegas, NV</span>
+          <span>{site.footer.locationLine}</span>
           <a
-            href="https://plexura.net"
+            href={site.footer.designerUrl}
             target="_blank"
             rel="noopener"
             className="no-underline text-ink-faint transition-colors duration-300 hover:text-gold active:text-gold"
           >
-            Designed by <span className="text-[#E3C77F] font-semibold">Plexura</span>
+            Designed by <span className="text-[#E3C77F] font-semibold">{site.footer.designerLabel}</span>
           </a>
         </Reveal>
       </div>

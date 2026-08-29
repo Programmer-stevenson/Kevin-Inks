@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { IMAGES } from '../data'
+import { useWordPressContent } from '../wordpress'
 import { EASE } from './Reveal'
 
 // ===== HERO LAYOUT KNOBS =====
@@ -50,6 +50,7 @@ const fade = (delay: number) => ({
 })
 
 export function Hero() {
+  const { site } = useWordPressContent()
   return (
     <section
       id="top"
@@ -94,11 +95,11 @@ export function Hero() {
       `}</style>
       {/* ===== MOBILE BACKDROP: full-bleed (unchanged) ===== */}
       <motion.div
-        aria-label="Kevin tattooing a client in the studio"
+        aria-label={site.hero.imageAlt}
         role="img"
         className="absolute inset-0 -z-20 bg-[#1a1816] bg-no-repeat min-[900px]:hidden"
         style={{
-          backgroundImage: `url(${IMAGES.hero})`,
+          backgroundImage: `url(${site.hero.image})`,
           backgroundSize: `auto ${MOBILE_HERO_ZOOM}`,
           backgroundPosition: 'center top',
           // no filter — photo shows in full original color on mobile
@@ -115,7 +116,7 @@ export function Hero() {
         className="absolute inset-y-0 right-0 -z-20 hidden bg-no-repeat min-[900px]:block"
         style={{
           width: DESKTOP_IMAGE_WIDTH,
-          backgroundImage: `url(${IMAGES.hero})`,
+          backgroundImage: `url(${site.hero.image})`,
           backgroundSize: `auto ${DESKTOP_IMAGE_ZOOM}`,
           backgroundPosition: DESKTOP_IMAGE_ANCHOR,
           filter: 'grayscale(35%) brightness(0.78) contrast(1.05)',
@@ -143,7 +144,7 @@ export function Hero() {
         }}
       >
         <motion.p className="eyebrow mb-6" {...fade(0.35)}>
-          Artist First. Tattooer Second.
+          {site.hero.eyebrow}
         </motion.p>
 
         {/* heading size: min (mobile) / fluid / max (large desktop).
@@ -157,7 +158,7 @@ export function Hero() {
         >
           <span className="block overflow-hidden">
             <motion.span className="block" variants={line} custom={0} initial="hidden" animate="visible">
-              Original Tattoos.
+              {site.hero.line1}
             </motion.span>
           </span>
           <span className="block overflow-hidden">
@@ -168,7 +169,7 @@ export function Hero() {
               initial="hidden"
               animate="visible"
             >
-              Lasting Stories.
+              {site.hero.line2}
             </motion.span>
           </span>
         </h1>
@@ -183,7 +184,7 @@ export function Hero() {
             }}
             {...fade(0.55)}
           >
-            Custom artwork designed with meaning.
+            {site.hero.subtext}
           </motion.p>
         </div>
       </div>
@@ -205,13 +206,13 @@ export function Hero() {
             href="#book"
             className="btn btn-fill px-5 py-3 text-[0.62rem] min-[900px]:px-[1.9rem] min-[900px]:py-[1.05rem] min-[900px]:text-[0.72rem]"
           >
-            Book Consultation <span className="arr">→</span>
+            {site.hero.primaryCta} <span className="arr">→</span>
           </a>
           <a
             href="#designs"
             className="btn btn-ghost px-5 py-3 text-[0.62rem] min-[900px]:px-[1.9rem] min-[900px]:py-[1.05rem] min-[900px]:text-[0.72rem]"
           >
-            Browse Designs <span className="arr">→</span>
+            {site.hero.secondaryCta} <span className="arr">→</span>
           </a>
         </motion.div>
 
@@ -237,10 +238,10 @@ export function Hero() {
               <circle cx="12" cy="12" r="4.4" stroke="url(#ig-grad-hero)" />
               <circle cx="17.6" cy="6.4" r="1.3" fill="url(#ig-grad-hero)" />
             </svg>
-            @Kevin.inks
+            {site.hero.instagramHandle}
           </strong>
 
-          <span>Las Vegas, NV</span>
+          <span>{site.hero.location}</span>
         </motion.div>
       </div>
 
@@ -249,9 +250,9 @@ export function Hero() {
         style={{ right: 'var(--pad)', bottom: 'clamp(3rem, 8vh, 6rem)' }}
         {...fade(0.9)}
       >
-        <strong className="text-ink-dim font-medium">@Kevin.inks</strong>
-        <span>By Appointment Only</span>
-        <span>Las Vegas, NV</span>
+        <strong className="text-ink-dim font-medium">{site.hero.instagramHandle}</strong>
+        <span>{site.hero.desktopNote}</span>
+        <span>{site.hero.location}</span>
       </motion.div>
     </section>
   )

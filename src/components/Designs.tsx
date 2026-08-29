@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { DESIGNS, type Design, type DesignStatus } from '../data'
+import type { Design, DesignStatus } from '../data'
+import { useWordPressContent } from '../wordpress'
 import { Reveal, EASE } from './Reveal'
 
 // Seconds for one full loop of the ribbon. Higher = slower drift.
@@ -13,6 +14,7 @@ const statusStyles: Record<DesignStatus, string> = {
 }
 
 export function Designs() {
+  const { designs, site } = useWordPressContent()
   // The design currently enlarged in the lightbox (null = ribbon running)
   const [open, setOpen] = useState<Design | null>(null)
 
@@ -28,7 +30,7 @@ export function Designs() {
   }, [open])
 
   // Two copies of the list = seamless infinite loop
-  const ribbonItems = [...DESIGNS, ...DESIGNS]
+  const ribbonItems = [...designs, ...designs]
 
   return (
     <section id="designs" className="section-pad relative bg-bg-1 border-y border-line overflow-hidden">
@@ -48,17 +50,15 @@ export function Designs() {
       {/* ===== INTRO ===== */}
       <div className="container-site mb-[clamp(2.5rem,5vw,4rem)]">
         <Reveal className="max-w-[44em]">
-          <p className="eyebrow mb-5">The Design Vault</p>
+          <p className="eyebrow mb-5">{site.designs.eyebrow}</p>
           <h2 className="h-display mb-6" style={{ fontSize: 'clamp(2.8rem, 7vw, 5.2rem)' }}>
-            New Designs <em className="not-italic text-crimson">Available.</em>
+            {site.designs.heading} <em className="not-italic text-crimson">{site.designs.accentHeading}</em>
           </h2>
           <p className="lede mb-9">
-            Each piece in the vault is an original composition, drawn once and tattooed once. When a
-            design is claimed, it's retired — your tattoo stays yours alone. Tap any design to take
-            a closer look.
+            {site.designs.intro}
           </p>
           <a href="#book" className="btn btn-red">
-            Explore All Designs <span className="arr">→</span>
+            {site.designs.button} <span className="arr">→</span>
           </a>
         </Reveal>
       </div>
@@ -113,8 +113,7 @@ export function Designs() {
       <div className="container-site mt-8">
         <Reveal delay={2}>
           <p className="text-[0.78rem] text-ink-faint tracking-[0.06em] max-w-[34em]">
-            <strong className="text-champagne font-medium">List members see every drop 48 hours early.</strong>{' '}
-            Most designs are claimed before they reach this page.
+            <strong className="text-champagne font-medium">{site.designs.memberNote}</strong>
           </p>
         </Reveal>
       </div>

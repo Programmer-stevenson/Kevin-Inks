@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { WORK, type WorkPiece } from '../data'
+import type { WorkPiece } from '../data'
+import { useWordPressContent } from '../wordpress'
 import { Reveal, EASE } from './Reveal'
 
 // Same drift speed as the Designs ribbon. Higher = slower.
 const RIBBON_SPEED_S = 40
 
 export function Work() {
+  const { work, site } = useWordPressContent()
   // The piece currently enlarged (null = ribbon running)
   const [open, setOpen] = useState<WorkPiece | null>(null)
 
@@ -21,20 +23,20 @@ export function Work() {
   }, [open])
 
   // Two copies = seamless infinite loop
-  const ribbonItems = [...WORK, ...WORK]
+  const ribbonItems = [...work, ...work]
 
   return (
     <section id="work" className="section-pad bg-bg-0 overflow-hidden">
       <div className="container-site">
         <Reveal className="flex flex-wrap items-end justify-between gap-6 pb-6 border-b border-line mb-[clamp(2.5rem,5vw,4.5rem)]">
           <div>
-            <p className="eyebrow mb-3.5">Portfolio</p>
+            <p className="eyebrow mb-3.5">{site.work.eyebrow}</p>
             <h2 className="h-display" style={{ fontSize: 'clamp(2.4rem, 6vw, 4.6rem)' }}>
-              Selected Work
+              {site.work.heading}
             </h2>
           </div>
           <a className="link-line" href="#work">
-            View Portfolio <span className="arr">→</span>
+            {site.work.linkLabel} <span className="arr">→</span>
           </a>
         </Reveal>
       </div>

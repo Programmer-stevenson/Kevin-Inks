@@ -1,11 +1,10 @@
 import { useState, type FormEvent } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Reveal, EASE } from './Reveal'
+import { useWordPressContent } from '../wordpress'
 
 // Background image for this section.
 // File must live at: <project root>/public/sexy.jpg
-const EMAIL_BG = '/sexy.jpg'
-
 // ===== MOBILE TUNING KNOBS =====
 // All mobile structural sizes are in vw so the composition is IDENTICAL on
 // every phone (SE to Pro Max) — values calibrated to a 390px-wide screen.
@@ -19,6 +18,7 @@ const TABLET_SHIFT_X = '0px'
 const TABLET_IMAGE_WINDOW = 'clamp(18rem, 48vw, 26rem)'
 
 export function EmailList() {
+  const { site } = useWordPressContent()
   const [email, setEmail] = useState('')
   const [joined, setJoined] = useState(false)
 
@@ -73,7 +73,7 @@ export function EmailList() {
       <div aria-hidden className="absolute inset-0 -z-20 min-[900px]:hidden">
         <div className="sticky top-0 h-screen">
           <img
-            src={EMAIL_BG}
+            src={site.email.image}
             alt=""
             className="absolute top-0 left-1/2 max-w-none"
             style={{
@@ -93,7 +93,7 @@ export function EmailList() {
         aria-hidden
         className="fixed inset-y-0 right-0 -z-20 hidden w-[55%] bg-cover bg-center min-[900px]:block"
         style={{
-          backgroundImage: `url(${EMAIL_BG})`,
+          backgroundImage: `url(${site.email.image})`,
           filter: 'grayscale(45%) brightness(0.6) contrast(1.08)',
         }}
       />
@@ -108,21 +108,19 @@ export function EmailList() {
 
       <div className="container-site">
         <Reveal as="p" className="eyebrow mb-6">
-          The Inner Circle
+          {site.email.eyebrow}
         </Reveal>
         <Reveal as="h2" delay={1} className="h-display mb-5" >
           <span className="email-h2 block leading-[0.94]">
-            New Designs.
+            {site.email.line1}
             <br />
-            <span className="text-champagne">Exclusive Access.</span>
+            <span className="text-champagne">{site.email.line2}</span>
             <br />
-            Early Booking.
+            {site.email.line3}
           </span>
         </Reveal>
         <Reveal as="p" delay={2} className="lede mb-10 min-[900px]:max-w-[26em]">
-          Instagram decides who sees my work. The list doesn't. Members get every design drop 48
-          hours early, first access to booking openings, and the stories behind each piece —
-          straight to your inbox, nothing else.
+          {site.email.copy}
         </Reveal>
 
         <AnimatePresence mode="wait">
@@ -139,12 +137,12 @@ export function EmailList() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="YOUR EMAIL ADDRESS"
+                placeholder={site.email.placeholder}
                 aria-label="Email address"
                 className="flex-1 bg-transparent border border-line-strong px-5 py-4 text-ink font-body text-[0.9rem] tracking-[0.04em] outline-none placeholder:text-ink-faint placeholder:tracking-[0.08em] focus:border-crimson transition-colors duration-500"
               />
               <button type="submit" className="btn btn-fill">
-                Join The List <span className="arr">→</span>
+                {site.email.button} <span className="arr">→</span>
               </button>
             </motion.form>
           ) : (
@@ -154,13 +152,13 @@ export function EmailList() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } }}
             >
-              You're in<span className="text-crimson">.</span> Watch your inbox for the next drop.
+              {site.email.success}
             </motion.p>
           )}
         </AnimatePresence>
 
         <Reveal as="p" delay={4} className="mt-5 text-[0.68rem] text-ink-faint tracking-[0.08em]">
-          One or two emails a month. No noise. Unsubscribe anytime.
+          {site.email.note}
         </Reveal>
       </div>
     </section>

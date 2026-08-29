@@ -1,50 +1,27 @@
 import { Reveal } from './Reveal'
-
-// Steps live here now (self-contained — no numbers, no data.ts dependency).
-// Edit freely.
-const STEPS = [
-  {
-    label: 'Where It Starts',
-    title: 'The Spark',
-    copy: "No forms, no flash books. Just you, me, and the reason you walked in. Tell me the story — I'll find the image hiding inside it.",
-  },
-  {
-    label: 'The Artwork',
-    title: 'Drawn From Nothing',
-    copy: "Your piece doesn't exist yet. That's the point. I design it from a blank page — one composition, built for your body, refined until neither of us can imagine it any other way.",
-  },
-  {
-    label: 'The Day',
-    title: 'The Session',
-    copy: 'A private studio. No crowd, no clock. Music you choose, a pace your body sets. The kind of day you end up telling people about along with the tattoo.',
-  },
-  {
-    label: 'Decades Later',
-    title: 'Made To Outlast',
-    copy: 'Linework engineered to hold its shape. Healing guidance that comes with follow-up, not a pamphlet. This piece should look deliberate at year one and year thirty.',
-  },
-]
+import { useWordPressContent } from '../wordpress'
 
 export function Experience() {
+  const { site } = useWordPressContent()
   return (
     <section id="experience" className="section-pad bg-bg-0">
       <div className="container-site">
         <Reveal className="flex flex-wrap items-end justify-between gap-6 pb-6 border-b border-line mb-[clamp(2.5rem,5vw,4.5rem)]">
           <div>
-            <p className="eyebrow mb-3.5">The Experience</p>
+            <p className="eyebrow mb-3.5">{site.experience.eyebrow}</p>
             <h2 className="h-display" style={{ fontSize: 'clamp(2.4rem, 6vw, 4.6rem)' }}>
-              From First Idea
+              {site.experience.headingLine1}
               <br />
-              To Lasting Artwork
+              {site.experience.headingLine2}
             </h2>
           </div>
           <a className="link-line" href="#book">
-            Start Yours <span className="arr">→</span>
+            {site.experience.cta} <span className="arr">→</span>
           </a>
         </Reveal>
 
         <div className="grid grid-cols-2 gap-x-6 border-t border-line min-[900px]:grid-cols-4 min-[900px]:gap-x-0 min-[900px]:border-b">
-          {STEPS.map((s, i) => (
+          {site.experience.steps.map((s, i) => (
             <Reveal
               key={s.title}
               delay={i}
