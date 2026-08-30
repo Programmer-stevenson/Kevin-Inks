@@ -21,7 +21,7 @@ const BUTTONS_PUSH_DOWN_DESKTOP = 'w50px'
 // Scale of the photo on mobile. 100% fills the hero height (the old "cover"
 // zoom); lower = slightly zoomed out. The small gap this leaves at the
 // bottom dissolves into the dark scrim.
-const MOBILE_HERO_ZOOM = '100%'
+const MOBILE_HERO_ZOOM = '70%'
 
 // ===== DESKTOP IMAGE KNOBS =====
 // The hero photo occupies the right side on desktop; the left side is solid
@@ -101,7 +101,9 @@ export function Hero() {
         style={{
           backgroundImage: `url(${site.hero.image})`,
           backgroundSize: `auto ${MOBILE_HERO_ZOOM}`,
-          backgroundPosition: 'center top',
+          // Keep the photo's right edge in frame on phones so the angel
+          // remains visible; any horizontal overflow is cropped from the left.
+          backgroundPosition: 'right top',
           // no filter — photo shows in full original color on mobile
         }}
         initial={{ scale: 1.07, opacity: 0.4 }}

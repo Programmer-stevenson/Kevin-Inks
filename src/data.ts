@@ -139,7 +139,7 @@ export const STEPS: Step[] = [
 ]
 
 export const IMAGES = {
-  hero: '/hero.png',
+  hero: '/fallen-angel.png',
   emailBg: '/sexy.jpg', // <- your image, must live at public/sexy.jpg
   portrait: '/kevin-tatts.jpg',
 }
