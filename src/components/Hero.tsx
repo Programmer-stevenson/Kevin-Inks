@@ -12,9 +12,17 @@ const HERO_TEXT_LEFT = '15px'
 // Match the iPad Mini reference composition on every sub-900px viewport.
 // The height cap keeps landscape devices from becoming excessively tall.
 const HERO_HEIGHT_MOBILE = 'min(137.2vw, 100svh)'
+// Phone-only breathing room between the nav and the hero artboard.
+const MOBILE_NAV_GAP = '15px'
 // Average color sampled from the artwork's bottom edge for a seamless phone
 // extension beneath the image.
 const MOBILE_EXTENSION_COLOR = '#0A0A09'
+const MOBILE_EXTENSION_BACKGROUND = [
+  `linear-gradient(to bottom, ${MOBILE_EXTENSION_COLOR} 0%, rgba(10,10,9,0.76) 22%, transparent 55%)`,
+  'radial-gradient(ellipse at 28% 42%, rgba(76,76,72,0.24) 0%, rgba(38,38,36,0.12) 34%, transparent 68%)',
+  'radial-gradient(ellipse at 78% 76%, rgba(58,58,55,0.18) 0%, rgba(28,28,27,0.08) 36%, transparent 66%)',
+  `linear-gradient(to bottom, ${MOBILE_EXTENSION_COLOR} 0%, #11110F 58%, #080808 100%)`,
+].join(', ')
 const HERO_HEIGHT_DESKTOP = '125svh'
 // Buttons drop, per breakpoint:
 const BUTTONS_PUSH_DOWN_MOBILE = '0px'
@@ -81,11 +89,15 @@ export function Hero() {
         }
         @media(max-width:599px){
           .hero-root{
-            min-height:calc(${HERO_HEIGHT_MOBILE} + 110px);
+            min-height:calc(${HERO_HEIGHT_MOBILE} + ${MOBILE_NAV_GAP} + 110px);
             background-color:${MOBILE_EXTENSION_COLOR};
+          }
+          .hero-text{
+            padding-top:calc(${MOBILE_NAV_GAP} + clamp(42px,min(10vw,10svh),78px));
           }
           .hero-lede-wrap{display:none}
           .hero-mobile-art{
+            top:${MOBILE_NAV_GAP};
             height:${HERO_HEIGHT_MOBILE};
             bottom:auto;
           }
@@ -113,13 +125,25 @@ export function Hero() {
           }}
         />
       </motion.div>
+      {/* Phone-only nav-to-art gap, blended with the same smoky charcoal used
+          beneath the artwork. */}
+      <div
+        aria-hidden
+        className="absolute inset-x-0 top-0 -z-10 min-[600px]:hidden"
+        style={{
+          height: MOBILE_NAV_GAP,
+          backgroundColor: MOBILE_EXTENSION_COLOR,
+          backgroundImage: MOBILE_EXTENSION_BACKGROUND,
+        }}
+      />
       <div className="absolute inset-0 -z-10 min-[900px]:hidden bg-gradient-to-t from-bg-0 from-[4%] via-bg-0/45 via-[30%] to-transparent to-[70%]" />
       <div
         aria-hidden
         className="absolute inset-x-0 bottom-0 -z-10 min-[600px]:hidden"
         style={{
-          top: HERO_HEIGHT_MOBILE,
+          top: `calc(${HERO_HEIGHT_MOBILE} + ${MOBILE_NAV_GAP})`,
           backgroundColor: MOBILE_EXTENSION_COLOR,
+          backgroundImage: MOBILE_EXTENSION_BACKGROUND,
         }}
       />
 
@@ -218,7 +242,7 @@ export function Hero() {
         }
         @media(max-width:599px){
           .hero-ctas{
-            top:calc(${HERO_HEIGHT_MOBILE} + 12px);
+            top:calc(${HERO_HEIGHT_MOBILE} + ${MOBILE_NAV_GAP} + 12px);
             bottom:auto;
           }
         }
