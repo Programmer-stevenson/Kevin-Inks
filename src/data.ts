@@ -149,8 +149,8 @@ export const CONTACT = {
   phone: '702-508-8136',
   phoneE164: '+17025088136',
   consultationText: "Hi Kevin, I'd like to book a tattoo consultation.",
-  instagram: 'https://instagram.com',
-  threads: 'https://threads.net',
+  instagram: 'https://www.instagram.com/kevin.inks/',
+  threads: 'https://www.threads.com/@kevin.inks',
   tiktok: 'https://tiktok.com',
   // Google Business Profile — replace with the real share link (g.page/r/...)
   googleBusiness: 'https://g.page/',
