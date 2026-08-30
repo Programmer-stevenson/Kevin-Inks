@@ -35,6 +35,18 @@ export function FinalCta() {
             Call Kevin <span className="arr">→</span>
           </a>
         </Reveal>
+        <Reveal delay={3} className="mt-7 flex flex-col items-center gap-2">
+          <span className="text-[0.58rem] font-semibold uppercase tracking-[0.28em] text-ink-faint">
+            Call or text Kevin directly
+          </span>
+          <a
+            href={`tel:${CONTACT.phoneE164}`}
+            className="font-display text-[clamp(1.45rem,4vw,2rem)] tracking-[0.08em] text-ink no-underline transition-colors duration-300 hover:text-crimson focus-visible:text-crimson"
+            aria-label={`Call Kevin at ${CONTACT.phone}`}
+          >
+            {CONTACT.phone}
+          </a>
+        </Reveal>
       </div>
     </section>
   )

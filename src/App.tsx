@@ -8,6 +8,7 @@ import { EmailList } from './components/EmailList'
 import { FinalCta } from './components/FinalCta'
 import { Footer } from './components/Footer'
 import { Studio } from './components/Studio'
+import { FloatingTextCta } from './components/FloatingTextCta'
 
 export default function App() {
   return (
@@ -24,7 +25,7 @@ export default function App() {
         <EmailList />
         
         <FinalCta />
-        
+        <FloatingTextCta />
       </main>
       <Footer />
     </>

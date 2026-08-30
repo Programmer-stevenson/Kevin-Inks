@@ -67,20 +67,26 @@ export function Work() {
             <h2 className="h-display" style={{ fontSize: 'clamp(2.4rem, 6vw, 4.6rem)' }}>
               {site.work.heading}
             </h2>
+            <button
+              type="button"
+              onClick={() => (showPortfolio ? closePortfolio() : setShowPortfolio(true))}
+              className="link-line mt-4 block border-0 bg-transparent p-0 cursor-pointer"
+              aria-expanded={showPortfolio}
+              aria-controls="full-portfolio"
+            >
+              {showPortfolio ? (
+                'Close Portfolio'
+              ) : (
+                <>
+                  <span className="hidden min-[700px]:inline">Click here to view portfolio</span>
+                  <span className="min-[700px]:hidden">Tap here to view portfolio</span>
+                </>
+              )}{' '}
+              <span className="arr" aria-hidden>
+                {showPortfolio ? '↑' : '→'}
+              </span>
+            </button>
           </div>
-
-          <button
-            type="button"
-            onClick={() => (showPortfolio ? closePortfolio() : setShowPortfolio(true))}
-            className="link-line border-0 bg-transparent p-0 cursor-pointer"
-            aria-expanded={showPortfolio}
-            aria-controls="full-portfolio"
-          >
-            {showPortfolio ? 'Close Portfolio' : site.work.linkLabel}{' '}
-            <span className="arr" aria-hidden>
-              {showPortfolio ? '↑' : '→'}
-            </span>
-          </button>
         </Reveal>
       </div>
 
@@ -192,6 +198,50 @@ export function Work() {
               </button>
             </div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Remains accessible while the visitor scrolls through the full grid. */}
+      <AnimatePresence>
+        {showPortfolio && (
+          <motion.button
+            type="button"
+            onClick={closePortfolio}
+            className="group fixed right-4 top-[4.75rem] z-[85] flex cursor-pointer items-center gap-3 overflow-hidden border border-[#752029] bg-[#080808]/95 px-3 py-2.5 text-left shadow-[0_14px_40px_rgba(0,0,0,0.55),0_0_24px_rgba(143,25,33,0.12)] backdrop-blur-xl transition-all duration-500 hover:-translate-y-0.5 hover:border-champagne/70 hover:shadow-[0_16px_42px_rgba(0,0,0,0.62),0_0_30px_rgba(143,25,33,0.22)] min-[900px]:right-6 min-[900px]:top-[5.25rem]"
+            style={{
+              clipPath:
+                'polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)',
+            }}
+            aria-label="Close portfolio and return to featured work"
+            initial={{ opacity: 0, x: 24, y: -8, scale: 0.96 }}
+            animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+            exit={{ opacity: 0, x: 18, y: -6, scale: 0.96 }}
+            transition={{ duration: 0.4, ease: EASE }}
+          >
+            <span
+              className="pointer-events-none absolute inset-y-0 left-0 w-px bg-gradient-to-b from-transparent via-crimson to-transparent"
+              aria-hidden="true"
+            />
+            <span
+              className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-champagne/45 to-transparent"
+              aria-hidden="true"
+            />
+
+            <span className="grid h-8 w-8 shrink-0 rotate-45 place-items-center border border-crimson/70 bg-crimson/10 transition-all duration-500 group-hover:border-champagne/70 group-hover:bg-champagne/10">
+              <span className="-rotate-45 font-display text-sm text-crimson transition-colors duration-500 group-hover:text-champagne" aria-hidden="true">
+                ↑
+              </span>
+            </span>
+
+            <span className="flex flex-col pr-1">
+              <span className="text-[0.43rem] font-semibold uppercase tracking-[0.3em] text-ink-faint">
+                Return to work
+              </span>
+              <span className="mt-0.5 font-display text-[0.92rem] tracking-[0.045em] text-ink transition-colors duration-500 group-hover:text-champagne">
+                Close Portfolio
+              </span>
+            </span>
+          </motion.button>
         )}
       </AnimatePresence>
 

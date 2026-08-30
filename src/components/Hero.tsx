@@ -3,9 +3,9 @@ import { useWordPressContent } from '../wordpress'
 import { EASE } from './Reveal'
 
 // ===== HERO LAYOUT KNOBS =====
-const NAV_CLEARANCE = '72px'
+const NAV_CLEARANCE = '62px'
 // Gap below the nav before the text block starts, per breakpoint:
-const HERO_TEXT_TOP_MOBILE = '20px'
+const HERO_TEXT_TOP_MOBILE = '10px'
 const HERO_TEXT_TOP_DESKTOP = '20px'
 // Extra left offset for the hero text block (eyebrow + headline + lede):
 const HERO_TEXT_LEFT = '15px'
@@ -15,13 +15,13 @@ const HERO_HEIGHT_MOBILE = 'calc(115svh + 20px)'
 const HERO_HEIGHT_DESKTOP = '125svh'
 // Buttons drop, per breakpoint:
 const BUTTONS_PUSH_DOWN_MOBILE = '125px'
-const BUTTONS_PUSH_DOWN_DESKTOP = '50px'
+const BUTTONS_PUSH_DOWN_DESKTOP = 'w50px'
 
 // ===== MOBILE IMAGE KNOB =====
 // Scale of the photo on mobile. 100% fills the hero height (the old "cover"
 // zoom); lower = slightly zoomed out. The small gap this leaves at the
 // bottom dissolves into the dark scrim.
-const MOBILE_HERO_ZOOM = '92%'
+const MOBILE_HERO_ZOOM = '100%'
 
 // ===== DESKTOP IMAGE KNOBS =====
 // The hero photo occupies the right side on desktop; the left side is solid
