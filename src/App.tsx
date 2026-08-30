@@ -21,8 +21,9 @@ export default function App() {
         <Experience />
         
         <EmailList />
-        <FinalCta />
         <Studio/>
+        <FinalCta />
+        
       </main>
       <Footer />
     </>
