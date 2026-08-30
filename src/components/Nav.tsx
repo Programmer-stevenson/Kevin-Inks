@@ -6,19 +6,16 @@ import { useWordPressContent } from '../wordpress'
 
 export function Nav() {
   const { site } = useWordPressContent()
-  const mappedNavLinks = NAV_LINKS.map((link, index) => ({
-    ...link,
-    label: site.navLabels[index] || link.label,
-  }))
-  const navLinks = mappedNavLinks.some((link) => link.href === '#studio')
-    ? mappedNavLinks
-    : [
-        ...mappedNavLinks,
-        {
-          label: site.navLabels[NAV_LINKS.length] || 'The Studio',
-          href: '#studio',
-        },
-      ]
+  const navLinks: Array<{ label: string; href: string }> = [
+    ...NAV_LINKS.map((link, index) => ({
+      ...link,
+      label: site.navLabels[index] || link.label,
+    })),
+    {
+      label: site.navLabels[NAV_LINKS.length] || 'The Studio',
+      href: '#studio',
+    },
+  ]
 
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
