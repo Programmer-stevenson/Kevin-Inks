@@ -160,6 +160,48 @@ export function Designs() {
           .vault-hero-art { background-size: auto 100%; }
         }
 
+        /* Desktop: match the Hero's left-to-right black dissolve.
+           The artwork itself fades in from transparent on the left,
+           while the overlay reinforces the same continuous blend. */
+        @media (min-width: 900px) {
+          .vault-hero-art {
+            -webkit-mask-image: linear-gradient(
+              to right,
+              transparent 0%,
+              black 55%,
+              black 100%
+            );
+            mask-image: linear-gradient(
+              to right,
+              transparent 0%,
+              black 55%,
+              black 100%
+            );
+          }
+
+          .vault-hero-shade {
+            background:
+              linear-gradient(
+                to right,
+                #090909 0%,
+                #090909 36%,
+                rgba(9,9,9,.45) 62%,
+                transparent 98%
+              ),
+              linear-gradient(
+                to top,
+                #090909 0%,
+                rgba(9,9,9,.5) 14%,
+                transparent 42%
+              ),
+              linear-gradient(
+                to bottom,
+                rgba(9,9,9,.58) 0%,
+                transparent 26%
+              );
+          }
+        }
+
         /* Preserve the tablet composition on large iPad Pro landscape widths
            without forcing ordinary desktop/laptop screens into tablet mode. */
         @media (min-width: 1200px) and (max-width: 1366px) and (any-pointer: coarse) {
