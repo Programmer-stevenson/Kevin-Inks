@@ -129,7 +129,7 @@ export const STEPS: Step[] = [
   {
     num: '03',
     title: 'The Session',
-    copy: 'A private studio, unhurried pace, and a process built around your comfort. The day should feel like part of the story — not something to get through.',
+    copy: 'A chill studio, unhurried pace, and a process built around your comfort. The day should feel like part of the story — not something to get through.',
   },
   {
     num: '04',
