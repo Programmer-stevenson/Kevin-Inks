@@ -12,6 +12,9 @@ const HERO_TEXT_LEFT = '15px'
 // Match the iPad Mini reference composition on every sub-900px viewport.
 // The height cap keeps landscape devices from becoming excessively tall.
 const HERO_HEIGHT_MOBILE = 'min(137.2vw, 100svh)'
+// Average color sampled from the artwork's bottom edge for a seamless phone
+// extension beneath the image.
+const MOBILE_EXTENSION_COLOR = '#0A0A09'
 const HERO_HEIGHT_DESKTOP = '125svh'
 // Buttons drop, per breakpoint:
 const BUTTONS_PUSH_DOWN_MOBILE = '0px'
@@ -77,7 +80,10 @@ export function Hero() {
           .hero-lede-wrap{justify-content:flex-start}
         }
         @media(max-width:599px){
-          .hero-root{min-height:calc(${HERO_HEIGHT_MOBILE} + 20px)}
+          .hero-root{
+            min-height:calc(${HERO_HEIGHT_MOBILE} + 110px);
+            background-color:${MOBILE_EXTENSION_COLOR};
+          }
           .hero-lede-wrap{display:none}
           .hero-mobile-art{
             height:${HERO_HEIGHT_MOBILE};
@@ -108,6 +114,14 @@ export function Hero() {
         />
       </motion.div>
       <div className="absolute inset-0 -z-10 min-[900px]:hidden bg-gradient-to-t from-bg-0 from-[4%] via-bg-0/45 via-[30%] to-transparent to-[70%]" />
+      <div
+        aria-hidden
+        className="absolute inset-x-0 bottom-0 -z-10 min-[600px]:hidden"
+        style={{
+          top: HERO_HEIGHT_MOBILE,
+          backgroundColor: MOBILE_EXTENSION_COLOR,
+        }}
+      />
 
       {/* ===== DESKTOP BACKDROP: image right, black left, fluid blend ===== */}
       <motion.div
@@ -204,7 +218,7 @@ export function Hero() {
         }
         @media(max-width:599px){
           .hero-ctas{
-            top:calc(min(115.7vw,84.3svh) + 10px);
+            top:calc(${HERO_HEIGHT_MOBILE} + 12px);
             bottom:auto;
           }
         }
