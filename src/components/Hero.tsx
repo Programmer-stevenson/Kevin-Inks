@@ -26,7 +26,7 @@ const MOBILE_EXTENSION_BACKGROUND = [
 const HERO_HEIGHT_DESKTOP = '125svh'
 // Buttons drop, per breakpoint:
 const BUTTONS_PUSH_DOWN_MOBILE = '0px'
-const BUTTONS_PUSH_DOWN_DESKTOP = 'w50px'
+const BUTTONS_PUSH_DOWN_DESKTOP = '0px'
 
 // ===== DESKTOP IMAGE KNOBS =====
 // The hero photo occupies the right side on desktop; the left side is solid
