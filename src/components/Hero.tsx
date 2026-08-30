@@ -5,26 +5,17 @@ import { EASE } from './Reveal'
 // ===== HERO LAYOUT KNOBS =====
 const NAV_CLEARANCE = '62px'
 // Gap below the nav before the text block starts, per breakpoint:
-const HERO_TEXT_TOP_MOBILE = '10px'
 const HERO_TEXT_TOP_DESKTOP = '20px'
 // Extra left offset for the hero text block (eyebrow + headline + lede):
 const HERO_TEXT_LEFT = '15px'
 // ===== HERO HEIGHT =====
-// How tall the hero section is, per breakpoint. 100svh = exactly one screen.
-const HERO_HEIGHT_MOBILE = 'calc(115svh + 20px)'
+// Match the iPad Mini reference composition on every sub-900px viewport.
+// The height cap keeps landscape devices from becoming excessively tall.
+const HERO_HEIGHT_MOBILE = 'min(137.2vw, 100svh)'
 const HERO_HEIGHT_DESKTOP = '125svh'
 // Buttons drop, per breakpoint:
-const BUTTONS_PUSH_DOWN_MOBILE = '125px'
+const BUTTONS_PUSH_DOWN_MOBILE = '0px'
 const BUTTONS_PUSH_DOWN_DESKTOP = 'w50px'
-
-// ===== MOBILE IMAGE KNOB =====
-// Scale of the photo on mobile. 100% fills the hero height (the old "cover"
-// zoom); lower = slightly zoomed out. The small gap this leaves at the
-// bottom dissolves into the dark scrim.
-const MOBILE_HERO_ZOOM = '70%'
-// Vertical position of the supporting line on phones. This places it just
-// beneath the angel's knees/lower body in the right-anchored photo crop.
-const MOBILE_LEDE_TOP = '72svh'
 
 // ===== DESKTOP IMAGE KNOBS =====
 // The hero photo occupies the right side on desktop; the left side is solid
@@ -63,8 +54,7 @@ export function Hero() {
       <style>{`
         .hero-root{
           min-height:${HERO_HEIGHT_MOBILE};
-          /* bottom padding grows with the button drop so they're never clipped */
-          padding-bottom:max(clamp(3rem,8vh,6rem), calc(${BUTTONS_PUSH_DOWN_MOBILE} + 100px));
+          padding-bottom:0;
         }
         @media(min-width:900px){
           .hero-root{
@@ -72,56 +62,51 @@ export function Hero() {
             padding-bottom:max(clamp(3rem,8vh,6rem), calc(${BUTTONS_PUSH_DOWN_DESKTOP} + 28px));
           }
         }
-        .hero-text{padding-top:calc(${NAV_CLEARANCE} + ${HERO_TEXT_TOP_MOBILE})}
+        .hero-text{padding-top:clamp(42px,min(10vw,10svh),78px)}
         @media(min-width:900px){
           .hero-text{padding-top:calc(${NAV_CLEARANCE} + ${HERO_TEXT_TOP_DESKTOP})}
         }
-        /* Mobile: heading sized in pure vw so it scales in lockstep with the
-           full-bleed photo — the heading-on-image composition is IDENTICAL
-           on every mobile viewport. Desktop keeps the clamped size. */
-        .hero-h1{font-size:14vw}
+        /* Sub-900px layout keeps the iPad Mini reference proportions. */
+        .hero-h1{font-size:min(10vw,10svh,4.8rem)}
+        @media(max-width:899px){
+          .hero-text{
+            text-align:left;
+            padding-right:0;
+          }
+          .hero-eyebrow{text-align:left}
+          .hero-lede-wrap{justify-content:flex-start}
+        }
         @media(max-width:599px){
-          .hero-lede-wrap{
-            position:absolute;
-            top:${MOBILE_LEDE_TOP};
-            left:var(--pad);
-            right:var(--pad);
-            z-index:1;
+          .hero-root{min-height:calc(${HERO_HEIGHT_MOBILE} + 20px)}
+          .hero-lede-wrap{display:none}
+          .hero-mobile-art{
+            height:${HERO_HEIGHT_MOBILE};
+            bottom:auto;
           }
         }
         @media(min-width:900px){
           .hero-h1{font-size:clamp(3.4rem, 7.5vw, 6.5rem)}
         }
-        /* ===== TABLET (600–899px: iPad portrait, large foldables) =====
-           The phone layout stretched to tablet width balloons — cap the
-           heading, bring the hero back to one screen, moderate button drop */
-        @media(min-width:600px) and (max-width:899px){
-          .hero-h1{font-size:4.8rem}
-          .hero-root{
-            min-height:100svh;
-            padding-bottom:max(clamp(3rem,8vh,6rem), calc(60px + 100px));
-          }
-          .hero-ctas{--btn-drop:60px}
-          .hero-text{padding-top:calc(${NAV_CLEARANCE} + 30px)}
-        }
       `}</style>
-      {/* ===== MOBILE BACKDROP: full-bleed (unchanged) ===== */}
+
+      {/* ===== MOBILE + TABLET BACKDROP: matches the iPad Mini reference ===== */}
       <motion.div
         aria-label={site.hero.imageAlt}
         role="img"
-        className="absolute inset-0 -z-20 bg-[#1a1816] bg-no-repeat min-[900px]:hidden"
-        style={{
-          backgroundImage: `url(${site.hero.image})`,
-          backgroundSize: `auto ${MOBILE_HERO_ZOOM}`,
-          // Keep the photo's right edge in frame on phones so the angel
-          // remains visible; any horizontal overflow is cropped from the left.
-          backgroundPosition: 'right top',
-          // no filter — photo shows in full original color on mobile
-        }}
-        initial={{ scale: 1.07, opacity: 0.4 }}
-        animate={{ scale: 1, opacity: 1 }}
+        className="hero-mobile-art absolute inset-0 -z-20 overflow-hidden bg-[#1a1816] min-[900px]:hidden"
+        initial={{ opacity: 0.4 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 2.2, ease: EASE }}
-      />
+      >
+        <div
+          className="absolute inset-0 bg-no-repeat"
+          style={{
+            backgroundImage: `url(${site.hero.image})`,
+            backgroundSize: 'auto 100%',
+            backgroundPosition: 'right top',
+          }}
+        />
+      </motion.div>
       <div className="absolute inset-0 -z-10 min-[900px]:hidden bg-gradient-to-t from-bg-0 from-[4%] via-bg-0/45 via-[30%] to-transparent to-[70%]" />
 
       {/* ===== DESKTOP BACKDROP: image right, black left, fluid blend ===== */}
@@ -130,7 +115,7 @@ export function Hero() {
         className="absolute inset-y-0 right-0 -z-20 hidden bg-no-repeat min-[900px]:block"
         style={{
           width: DESKTOP_IMAGE_WIDTH,
-          backgroundImage: `url(${site.hero.image})`,
+          backgroundImage: 'url(/fallen-gargoyle.png)',
           backgroundSize: `auto ${DESKTOP_IMAGE_ZOOM}`,
           backgroundPosition: DESKTOP_IMAGE_ANCHOR,
           filter: 'grayscale(35%) brightness(0.78) contrast(1.05)',
@@ -157,7 +142,7 @@ export function Hero() {
           paddingLeft: HERO_TEXT_LEFT,
         }}
       >
-        <motion.p className="eyebrow mb-6" {...fade(0.35)}>
+        <motion.p className="hero-eyebrow eyebrow mb-6" {...fade(0.35)}>
           {site.hero.eyebrow}
         </motion.p>
 
@@ -188,8 +173,8 @@ export function Hero() {
           </span>
         </h1>
 
-        {/* Supporting line — plain text at every breakpoint. On phones it is
-            positioned beneath the angel; tablet/desktop stay in normal flow. */}
+        {/* Supporting line is hidden on phones and remains visible on tablet
+            and desktop. */}
         <div className="hero-lede-wrap flex justify-center min-[900px]:justify-start">
           <motion.p
             className="lede inline-block text-center bg-transparent px-0 py-0 min-[900px]:text-ink min-[900px]:text-left"
@@ -209,22 +194,37 @@ export function Hero() {
           animates, which silently cancelled the drop in earlier versions. */}
       <style>{`
         .hero-ctas{--btn-drop:${BUTTONS_PUSH_DOWN_MOBILE}}
+        @media(max-width:899px){
+          .hero-ctas{
+            position:absolute;
+            bottom:8px;
+            left:0;
+            right:0;
+          }
+        }
+        @media(max-width:599px){
+          .hero-ctas{
+            top:calc(min(115.7vw,84.3svh) + 10px);
+            bottom:auto;
+          }
+        }
+        @media(min-width:600px) and (max-width:899px){.hero-ctas{bottom:16px}}
         @media(min-width:900px){.hero-ctas{--btn-drop:${BUTTONS_PUSH_DOWN_DESKTOP}}}
       `}</style>
       <div className="hero-ctas container-site w-full" style={{ transform: 'translateY(var(--btn-drop))' }}>
         <motion.div
-          className="flex flex-wrap gap-4 justify-center"
+          className="flex flex-nowrap gap-2 min-[600px]:gap-4 justify-center"
           {...fade(0.7)}
         >
           <a
             href="#book"
-            className="btn btn-fill px-5 py-3 text-[0.62rem] min-[900px]:px-[1.9rem] min-[900px]:py-[1.05rem] min-[900px]:text-[0.72rem]"
+            className="btn btn-fill px-3 py-2 text-[0.55rem] min-[600px]:px-5 min-[600px]:py-3 min-[600px]:text-[0.62rem] min-[900px]:px-[1.9rem] min-[900px]:py-[1.05rem] min-[900px]:text-[0.72rem]"
           >
             {site.hero.primaryCta} <span className="arr">→</span>
           </a>
           <a
             href="#designs"
-            className="btn btn-ghost px-5 py-3 text-[0.62rem] min-[900px]:px-[1.9rem] min-[900px]:py-[1.05rem] min-[900px]:text-[0.72rem]"
+            className="btn btn-ghost px-3 py-2 text-[0.55rem] min-[600px]:px-5 min-[600px]:py-3 min-[600px]:text-[0.62rem] min-[900px]:px-[1.9rem] min-[900px]:py-[1.05rem] min-[900px]:text-[0.72rem]"
           >
             {site.hero.secondaryCta} <span className="arr">→</span>
           </a>
@@ -233,7 +233,7 @@ export function Hero() {
         {/* studio meta — mobile & tablet version: centered under the buttons
             (desktop keeps the absolute bottom-right block below) */}
        <motion.div
-  className="min-[900px]:hidden mt-7 flex flex-col items-center gap-1 text-center text-[0.64rem] tracking-[0.22em] uppercase text-ink-faint"
+  className="min-[900px]:hidden mt-4 flex flex-col items-center gap-1 text-center text-[0.64rem] tracking-[0.22em] uppercase text-ink-faint"
   {...fade(0.9)}
 >
   <a
