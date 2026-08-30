@@ -25,28 +25,80 @@ export function About() {
       id="about"
       className="section-pad relative overflow-hidden border-y border-line bg-bg-1"
     >
-      {/* Warm golden light fading naturally into the site's dark background. */}
+      <style>{`
+        .about-dark-field {
+          background:
+            radial-gradient(ellipse at 31% 42%, rgba(184,190,188,.12) 0%, rgba(81,83,80,.085) 25%, rgba(22,22,21,0) 62%),
+            radial-gradient(ellipse at 76% 58%, rgba(105,108,105,.075) 0%, rgba(48,49,47,.055) 32%, transparent 64%),
+            linear-gradient(180deg, #0a0a09 0%, #11110f 48%, #090909 100%);
+        }
+
+        .about-dark-smoke {
+          position: absolute;
+          inset: -22%;
+          pointer-events: none;
+          opacity: .52;
+          filter: blur(36px);
+          background:
+            radial-gradient(ellipse at 22% 52%, rgba(132,136,133,.11), transparent 34%),
+            radial-gradient(ellipse at 66% 38%, rgba(75,77,74,.13), transparent 31%),
+            radial-gradient(ellipse at 52% 78%, rgba(42,43,41,.18), transparent 38%);
+          animation: about-smoke-drift 14s ease-in-out infinite alternate;
+        }
+
+        .about-dark-vignette {
+          background:
+            linear-gradient(90deg, rgba(7,7,7,.88) 0%, transparent 22%, transparent 78%, rgba(7,7,7,.88) 100%),
+            linear-gradient(180deg, rgba(7,7,7,.62) 0%, transparent 18%, transparent 80%, rgba(7,7,7,.72) 100%);
+        }
+
+        .about-portrait {
+          border: 1px solid rgba(218,214,205,.13);
+          box-shadow:
+            0 0 0 1px rgba(255,255,255,.018),
+            0 0 42px rgba(188,195,193,.075),
+            0 0 95px rgba(65,67,65,.13),
+            0 26px 75px rgba(0,0,0,.68);
+        }
+
+        .about-portrait::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          z-index: 2;
+          pointer-events: none;
+          border-radius: 999px;
+          box-shadow:
+            inset 0 0 0 1px rgba(236,230,218,.055),
+            inset 0 -24px 52px rgba(0,0,0,.22),
+            inset 0 18px 42px rgba(196,202,200,.035);
+        }
+
+        @keyframes about-smoke-drift {
+          from { transform: translate3d(-2%, 1%, 0) scale(.98); }
+          to { transform: translate3d(3%, -2%, 0) scale(1.04); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .about-dark-smoke { animation: none; }
+        }
+      `}</style>
+
+      {/* Graphite smoke and cold-silver light replace the previous gold glow. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            'radial-gradient(circle at 50% 42%, rgba(214, 168, 74, 0.28) 0%, rgba(124, 86, 23, 0.16) 30%, rgba(18, 16, 15, 0) 66%), linear-gradient(180deg, rgba(18, 16, 15, 0.18) 0%, rgba(49, 33, 10, 0.34) 48%, rgba(18, 16, 15, 0.2) 100%)',
-        }}
+        className="about-dark-field pointer-events-none absolute inset-0"
       />
+      <div aria-hidden="true" className="about-dark-smoke" />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-80"
-        style={{
-          background:
-            'linear-gradient(90deg, rgba(18, 16, 15, 0.88) 0%, transparent 24%, transparent 76%, rgba(18, 16, 15, 0.88) 100%)',
-        }}
+        className="about-dark-vignette pointer-events-none absolute inset-0"
       />
 
       <div className="container-site relative z-10 grid items-center gap-12 min-[900px]:grid-cols-[5fr_6fr] min-[900px]:gap-[5.5rem]">
         <Reveal className="flex flex-col items-center gap-5 min-[900px]:items-start">
           <div
-            className="group relative aspect-square overflow-hidden rounded-full bg-bg-0 shadow-[0_0_75px_rgba(214,168,74,0.34)]"
+            className="about-portrait group relative aspect-square overflow-hidden rounded-full bg-bg-0"
             style={{ width: PORTRAIT_SIZE }}
           >
             <img

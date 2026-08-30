@@ -6,6 +6,7 @@ import { Reveal, EASE } from './Reveal'
 
 // Seconds for one full loop of the ribbon. Higher = slower drift.
 const RIBBON_SPEED_S = 40
+const VAULT_HERO_IMAGE = '/arc.png'
 
 const statusStyles: Record<DesignStatus, string> = {
   available: 'text-champagne border-champagne/40',
@@ -36,15 +37,148 @@ export function Designs() {
   return (
     <section
       id="designs"
-      className="section-pad relative overflow-hidden border-y border-line bg-bg-1"
+      className="relative overflow-hidden border-y border-line bg-bg-1"
     >
       <style>{`
-        /*
-         * The old version animated stroke-dashoffset and two drop shadows on
-         * every path. That forced the entire SVG to repaint on every frame.
-         * These lines remain visible, while one inexpensive opacity animation
-         * now runs on the already-composited SVG layer.
-         */
+        /* Arc is scaled by height on every phone. This keeps his full body and
+           sword inside the frame while the dark left side absorbs the crop. */
+        .vault-hero {
+          min-height: min(145vw, 88svh);
+          display: flex;
+          align-items: flex-start;
+          padding-top: clamp(3rem, 12vw, 5rem);
+          padding-bottom: clamp(2.5rem, 9vw, 4rem);
+        }
+
+        .vault-hero-art {
+          background-repeat: no-repeat;
+          background-size: auto 100%;
+          background-position: right bottom;
+          filter: grayscale(1) brightness(.78) contrast(1.08);
+          transform-origin: right center;
+        }
+
+        .vault-hero-shade {
+          background:
+            linear-gradient(90deg, #090909 0%, rgba(9,9,9,.96) 24%, rgba(9,9,9,.68) 52%, rgba(9,9,9,.06) 84%),
+            linear-gradient(to top, #090909 0%, rgba(9,9,9,.5) 14%, transparent 42%),
+            linear-gradient(to bottom, rgba(9,9,9,.58) 0%, transparent 26%);
+        }
+
+        .vault-copy {
+          max-width: 62%;
+        }
+
+        .vault-heading {
+          font-size: clamp(2.05rem, 9.6vw, 3.25rem);
+          line-height: .92;
+        }
+
+        @media (max-width: 599px) {
+          .vault-hero {
+            min-height: min(170vw, 92svh);
+            display: block;
+            padding-top: 0;
+            padding-bottom: 0;
+          }
+
+          .vault-content {
+            position: absolute;
+            inset: 0;
+            height: 100%;
+            padding-top: clamp(2.75rem, 11vw, 4rem);
+            padding-bottom: 25px;
+          }
+
+          /* The centered copy gets its own clean upper zone; the CTA is
+             independently pinned 25px above the hero's bottom edge. */
+          .vault-copy {
+            max-width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+          }
+
+          .vault-heading {
+            max-width: 12ch;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: clamp(2.15rem, 10vw, 3.25rem);
+          }
+
+          .vault-copy .lede {
+            max-width: 30em;
+            margin-left: auto;
+            margin-right: auto;
+          }
+
+          .vault-cta { margin-top: auto; }
+
+          .vault-hero-art {
+            inset: auto 0 0 0;
+            height: 68%;
+            background-size: auto 100%;
+            background-position: right bottom;
+          }
+
+          .vault-hero-shade {
+            background:
+              linear-gradient(to bottom, #090909 0%, #090909 27%, rgba(9,9,9,.91) 40%, rgba(9,9,9,.35) 61%, transparent 78%),
+              linear-gradient(to top, #090909 0%, rgba(9,9,9,.38) 13%, transparent 35%);
+          }
+        }
+
+        @media (min-width: 600px) and (max-width: 1199px) {
+          .vault-hero {
+            min-height: min(90vw, 78svh);
+            align-items: center;
+            padding-top: 4rem;
+            padding-bottom: 4rem;
+          }
+
+          .vault-content {
+            padding-left: calc(var(--pad) + clamp(1.25rem, 3vw, 2.25rem));
+            padding-right: var(--pad);
+          }
+
+          .vault-copy { max-width: 50%; }
+          .vault-heading { font-size: clamp(3rem, 7.2vw, 4.5rem); }
+        }
+
+        @media (min-width: 1200px) {
+          .vault-hero {
+            min-height: min(70vw, 88svh);
+            align-items: center;
+            padding-top: clamp(5rem, 8vw, 8rem);
+            padding-bottom: clamp(5rem, 8vw, 8rem);
+          }
+
+          .vault-copy { max-width: min(47%, 44rem); }
+          .vault-heading { font-size: clamp(3.6rem, 6.5vw, 6.6rem); }
+          .vault-hero-art { background-size: auto 100%; }
+        }
+
+        /* Preserve the tablet composition on large iPad Pro landscape widths
+           without forcing ordinary desktop/laptop screens into tablet mode. */
+        @media (min-width: 1200px) and (max-width: 1366px) and (any-pointer: coarse) {
+          .vault-hero {
+            min-height: min(90vw, 78svh);
+            align-items: center;
+            padding-top: 4rem;
+            padding-bottom: 4rem;
+          }
+
+          .vault-content {
+            padding-left: calc(var(--pad) + clamp(1.25rem, 3vw, 2.25rem));
+            padding-right: var(--pad);
+          }
+
+          .vault-copy { max-width: 50%; }
+          .vault-heading { font-size: clamp(3rem, 7.2vw, 4.5rem); }
+        }
+
         .design-linework {
           opacity: .34;
           will-change: opacity;
@@ -108,38 +242,43 @@ export function Designs() {
         <path className="design-line" d="M-40 350 C 160 170, 400 430, 640 330 S 980 140, 1260 360 S 1440 470, 1500 390" />
       </svg>
 
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute top-10 z-[1] select-none font-display leading-none text-transparent"
-        style={{
-          right: 'var(--pad)',
-          fontSize: 'clamp(4rem, 12vw, 9rem)',
-          WebkitTextStroke: '1px rgba(245,241,234,0.06)',
-        }}
-      >
-        VAULT
-      </span>
+      {/* ===== VAULT HERO ===== */}
+      <div className="vault-hero relative z-[1] overflow-hidden">
+        <motion.div
+          role="img"
+          aria-label="Arc, an armored archangel holding a sword above a shadowed battlefield"
+          className="vault-hero-art absolute inset-0 -z-20"
+          style={{ backgroundImage: `url(${VAULT_HERO_IMAGE})` }}
+          initial={{ opacity: 0.35, scale: 1.025 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 1.8, ease: EASE }}
+        />
+        <div className="vault-hero-shade absolute inset-0 -z-10" />
 
-      <div className="relative z-10">
-        <div className="container-site mb-[clamp(2.5rem,5vw,4rem)]">
-          <Reveal className="max-w-[44em]">
-            <p className="eyebrow mb-5">{site.designs.eyebrow}</p>
-            <h2
-              className="h-display mb-6"
-              style={{ fontSize: 'clamp(2.8rem, 7vw, 5.2rem)' }}
-            >
+        <div className="vault-content container-site relative z-10 w-full">
+          <Reveal className="vault-copy">
+            <p className="eyebrow mb-4 min-[600px]:mb-5">
+              {site.designs.eyebrow}
+            </p>
+            <h2 className="vault-heading h-display mb-5 min-[600px]:mb-6">
               {site.designs.heading}{' '}
               <em className="not-italic text-crimson">
                 {site.designs.accentHeading}
               </em>
             </h2>
-            <p className="lede mb-9">{site.designs.intro}</p>
-            <a href="#book" className="btn btn-red">
+            <p className="lede mb-7 text-[0.78rem] leading-relaxed min-[600px]:mb-9 min-[600px]:text-[inherit]">
+              {site.designs.intro}
+            </p>
+            <a href="#book" className="vault-cta btn btn-red">
               {site.designs.button} <span className="arr">→</span>
             </a>
           </Reveal>
         </div>
+      </div>
 
+      {/* ===== DESIGN RIBBON ===== */}
+      <div className="relative z-10 pb-[clamp(3.5rem,7vw,6rem)] pt-[clamp(2.5rem,5vw,4rem)]">
         <Reveal delay={1}>
           <div
             className="ribbon overflow-hidden"
