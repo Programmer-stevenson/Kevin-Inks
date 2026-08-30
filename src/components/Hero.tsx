@@ -22,6 +22,9 @@ const BUTTONS_PUSH_DOWN_DESKTOP = 'w50px'
 // zoom); lower = slightly zoomed out. The small gap this leaves at the
 // bottom dissolves into the dark scrim.
 const MOBILE_HERO_ZOOM = '70%'
+// Vertical position of the supporting line on phones. This places it just
+// beneath the angel's knees/lower body in the right-anchored photo crop.
+const MOBILE_LEDE_TOP = '72svh'
 
 // ===== DESKTOP IMAGE KNOBS =====
 // The hero photo occupies the right side on desktop; the left side is solid
@@ -77,6 +80,15 @@ export function Hero() {
            full-bleed photo — the heading-on-image composition is IDENTICAL
            on every mobile viewport. Desktop keeps the clamped size. */
         .hero-h1{font-size:14vw}
+        @media(max-width:599px){
+          .hero-lede-wrap{
+            position:absolute;
+            top:${MOBILE_LEDE_TOP};
+            left:var(--pad);
+            right:var(--pad);
+            z-index:1;
+          }
+        }
         @media(min-width:900px){
           .hero-h1{font-size:clamp(3.4rem, 7.5vw, 6.5rem)}
         }
@@ -176,11 +188,11 @@ export function Hero() {
           </span>
         </h1>
 
-        {/* supporting line — plain with a text-shadow on mobile (no red
-            background), oxblood chip on desktop. Centered on mobile. */}
-        <div className="flex justify-center min-[900px]:justify-start">
+        {/* Supporting line — plain text at every breakpoint. On phones it is
+            positioned beneath the angel; tablet/desktop stay in normal flow. */}
+        <div className="hero-lede-wrap flex justify-center min-[900px]:justify-start">
           <motion.p
-            className="lede inline-block text-center bg-transparent px-0 py-0 min-[900px]:bg-oxblood min-[900px]:text-ink min-[900px]:px-5 min-[900px]:py-2.5 min-[900px]:text-left"
+            className="lede inline-block text-center bg-transparent px-0 py-0 min-[900px]:text-ink min-[900px]:text-left"
             style={{
               textShadow: '0 1px 3px rgba(0,0,0,0.55), 0 4px 18px rgba(0,0,0,0.5), 0 12px 48px rgba(0,0,0,0.4)',
             }}
