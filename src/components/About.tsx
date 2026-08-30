@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useWordPressContent } from '../wordpress'
 import { Reveal } from './Reveal'
 
@@ -7,6 +8,8 @@ const PORTRAIT_SIZE = 'min(68vw, 400px)'
 
 export function About() {
   const { site } = useWordPressContent()
+  const [isStoryOpen, setIsStoryOpen] = useState(false)
+
   return (
     <section id="about" className="section-pad bg-bg-1 border-y border-line">
       <div className="container-site grid gap-12 items-center min-[900px]:grid-cols-[5fr_6fr] min-[900px]:gap-[5.5rem]">
@@ -42,6 +45,7 @@ export function About() {
           >
             “{site.about.quote}”
           </blockquote>
+
           {/* Mobile: 2-up grid with the third stat centered beneath the pair.
               Desktop: original 3-across row. */}
           <div className="grid grid-cols-2 gap-x-8 gap-y-8 mb-10 min-[900px]:flex min-[900px]:flex-wrap min-[900px]:gap-11">
@@ -57,11 +61,46 @@ export function About() {
               </div>
             ))}
           </div>
+
           {/* Button: centered on mobile, left-aligned on desktop */}
           <div className="flex justify-center min-[900px]:justify-start">
-            <a href="#stories" className="btn btn-ghost">
-              {site.about.cta} <span className="arr">→</span>
-            </a>
+            <button
+              type="button"
+              className="btn btn-ghost"
+              aria-expanded={isStoryOpen}
+              aria-controls="kevin-story"
+              onClick={() => setIsStoryOpen((open) => !open)}
+            >
+              {isStoryOpen ? 'Close Story' : site.about.cta}
+              <span
+                className={`arr transition-transform duration-500 ${isStoryOpen ? 'rotate-90' : ''}`}
+                aria-hidden="true"
+              >
+                →
+              </span>
+            </button>
+          </div>
+
+          {/* Expanded story content — replace this placeholder copy later. */}
+          <div
+            id="kevin-story"
+            className={`grid transition-[grid-template-rows,opacity] duration-700 ease-lux ${
+              isStoryOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+            }`}
+            aria-hidden={!isStoryOpen}
+          >
+            <div className="overflow-hidden">
+              <div className="mt-8 max-w-[34em] border-l border-crimson pl-6 text-left text-ink-dim">
+                <p className="eyebrow mb-4">Kevin's Story</p>
+                <p className="mb-4 leading-relaxed">
+                  Kevin's full story will go here. This is placeholder text for his background, creative
+                  journey, and the experiences that shaped his approach to tattooing.
+                </p>
+                <p className="leading-relaxed">
+                  Replace this copy later with his real story while keeping the same expandable layout.
+                </p>
+              </div>
+            </div>
           </div>
         </Reveal>
       </div>

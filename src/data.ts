@@ -7,8 +7,8 @@ export const NAV_LINKS = [
   { label: 'Home', href: '#top' },
   { label: 'My Craft', href: '#work' },
   { label: 'Available Designs', href: '#designs' },
-  { label: 'Experience', href: '#experience' },
-  { label: 'About', href: '#about' },
+  { label: 'Your Experience', href: '#experience' },
+  { label: 'About Me', href: '#about' },
   
 ] as const
 
@@ -146,6 +146,9 @@ export const IMAGES = {
 
 export const CONTACT = {
   email: 'hello@kevininks.com',
+  phone: '702-508-8136',
+  phoneE164: '+17025088136',
+  consultationText: "Hi Kevin, I'd like to book a tattoo consultation.",
   instagram: 'https://instagram.com',
   threads: 'https://threads.net',
   tiktok: 'https://tiktok.com',
