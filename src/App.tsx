@@ -15,13 +15,14 @@ export default function App() {
       <Nav />
       <main>
         <Hero />
-        <Work />
         <About />
-        <Designs />
+        <Work />
         <Experience />
+        <Designs />
         
-        <EmailList />
         <Studio/>
+        <EmailList />
+        
         <FinalCta />
         
       </main>
