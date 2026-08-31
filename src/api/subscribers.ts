@@ -18,26 +18,37 @@ export async function subscribeEmail(
   email: string,
   website = '',
 ): Promise<SubscribeResult> {
-  const response = await fetch(
-    `${getWordPressBaseUrl()}/wp-json/kevin-inks/v1/subscribe`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+  const body = new URLSearchParams({
+    email,
+    website,
+  })
+
+  let response: Response
+
+  try {
+    response = await fetch(
+      `${getWordPressBaseUrl()}/wp-json/kevin-inks/v1/subscribe`,
+      {
+        method: 'POST',
+        // Deliberately do not set Content-Type manually.
+        // URLSearchParams makes this a standard form-encoded request and avoids
+        // the JSON CORS preflight that some WordPress.com staging sites reject.
+        body,
       },
-      body: JSON.stringify({
-        email,
-        website,
-      }),
-    },
-  )
+    )
+  } catch {
+    throw new Error(
+      'Could not reach the email service. Please try again in a moment.',
+    )
+  }
 
   let data: Partial<SubscribeResult> = {}
 
   try {
     data = (await response.json()) as Partial<SubscribeResult>
   } catch {
-    // Keep a useful fallback if WordPress returns a non-JSON error page.
+    // WordPress can occasionally return an HTML error page. Keep a useful
+    // frontend fallback instead of exposing raw markup to the visitor.
   }
 
   if (!response.ok) {
